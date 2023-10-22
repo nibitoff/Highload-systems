@@ -15,4 +15,8 @@ public class IngredientService {
     public Iterable<IngredientEntity> findAll(){
         return ingredientRepo.findAll();
     }
+
+    public IngredientEntity addIngredient(IngredientEntity ingredient){
+        return ingredientRepo.save(ingredient);
+    }
 }

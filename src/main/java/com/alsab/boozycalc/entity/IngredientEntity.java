@@ -4,12 +4,46 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "ingredients")
-public record IngredientEntity (
+public class IngredientEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        Long id,
-        String name,
-        String description,
-        Long type
-){
+        private Long id;
+        private  String name;
+        private  String description;
+        private  Long type;
+
+        public IngredientEntity(){
+
+        }
+        public Long getId() {
+                return id;
+        }
+
+        public void setId(Long id) {
+                this.id = id;
+        }
+
+        public String getName() {
+                return name;
+        }
+
+        public void setName(String name) {
+                this.name = name;
+        }
+
+        public String getDescription() {
+                return description;
+        }
+
+        public void setDescription(String description) {
+                this.description = description;
+        }
+
+        public Long getType() {
+                return type;
+        }
+
+        public void setType(Long type) {
+                this.type = type;
+        }
 }

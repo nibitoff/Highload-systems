@@ -13,10 +13,10 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth
+        http.csrf().disable()
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/api/v1/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/v1/ingredients/**").permitAll()
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
