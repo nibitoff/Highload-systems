@@ -1,6 +1,7 @@
 package com.alsab.boozycalc.controller;
 
 import com.alsab.boozycalc.entity.IngredientEntity;
+import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,15 @@ public class IngredientController {
             return ResponseEntity.ok(ingredientService.addIngredient(ingredient));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<?> editIngredient(@RequestBody IngredientEntity ingredient) {
+        try {
+            return ResponseEntity.ok(ingredientService.editIngredient(ingredient));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
         }
     }
 
