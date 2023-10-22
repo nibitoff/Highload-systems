@@ -13,19 +13,29 @@ public class IngredientController {
     private IngredientService ingredientService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllIngredients(){
+    public ResponseEntity<?> getAllIngredients() {
         try {
             return ResponseEntity.ok(ingredientService.findAll());
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewIngredient(@RequestBody IngredientEntity ingredient){
+    public ResponseEntity<?> addNewIngredient(@RequestBody IngredientEntity ingredient) {
         try {
             return ResponseEntity.ok(ingredientService.addIngredient(ingredient));
-        } catch (Exception e){
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteIngredient(Long id) {
+        try {
+            ingredientService.deleteIngredient(id);
+            return ResponseEntity.ok(id);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
     }

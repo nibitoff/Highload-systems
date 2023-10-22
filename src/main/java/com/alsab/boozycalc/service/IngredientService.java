@@ -5,8 +5,6 @@ import com.alsab.boozycalc.repository.IngredientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class IngredientService {
     @Autowired
@@ -18,5 +16,9 @@ public class IngredientService {
 
     public IngredientEntity addIngredient(IngredientEntity ingredient){
         return ingredientRepo.save(ingredient);
+    }
+
+    public void deleteIngredient(Long ingredientId){
+        ingredientRepo.deleteById(ingredientId);
     }
 }
