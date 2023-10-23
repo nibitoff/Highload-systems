@@ -1,7 +1,6 @@
 package com.alsab.boozycalc.controller;
 
 import com.alsab.boozycalc.dto.RecipeDto;
-import com.alsab.boozycalc.entity.RecipeEntity;
 import com.alsab.boozycalc.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +25,25 @@ public class RecipeController {
     public ResponseEntity<?> addNewRecipe(@RequestBody RecipeDto recipe) {
         try {
             return ResponseEntity.ok(recipeService.add(recipe));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<?> editRecipe(@RequestBody RecipeDto recipe) {
+        try {
+            return ResponseEntity.ok(recipeService.edit(recipe));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteRecipe(@RequestBody RecipeDto recipe) {
+        try {
+            recipeService.delete(recipe);
+            return ResponseEntity.ok(recipe);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
