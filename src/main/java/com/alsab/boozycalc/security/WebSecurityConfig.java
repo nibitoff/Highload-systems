@@ -16,7 +16,7 @@ public class WebSecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/api/v1/ingredients/**").permitAll()
+                        .requestMatchers("/api/v1/**").permitAll()
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
