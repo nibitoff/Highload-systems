@@ -5,7 +5,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Embeddable
-public class RoleId {
+public class UserRoleId {
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private RoleEntity role;
@@ -14,7 +14,7 @@ public class RoleId {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
-    public RoleId() {
+    public UserRoleId() {
     }
 
     public RoleEntity getRole() {

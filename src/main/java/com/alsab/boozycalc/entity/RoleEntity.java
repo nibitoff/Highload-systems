@@ -5,19 +5,21 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "roles")
 public class RoleEntity {
-    @EmbeddedId
-    private RoleId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
     @Column(name = "name")
     private String name;
 
     @Column(name = "description")
     private String description;
 
-    public RoleId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(RoleId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
