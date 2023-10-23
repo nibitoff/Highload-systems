@@ -37,4 +37,22 @@ public class RecipeService {
                 ), recipe.quantity()
         ));
     }
+
+    public RecipeEntity edit(RecipeDto recipe) throws ItemNotFoundException {
+        RecipeId id = new RecipeId(
+                    ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException("no ingredient with id " + recipe.ingredient_id())),
+                    cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException("no cocktail with id " + recipe.cocktail_id()))
+                );
+        RecipeEntity rec = recipeRepo.findById(id).orElseThrow(() -> new ItemNotFoundException("no recipe relation for cocktail " + recipe.cocktail_id() + " and ingredient " + recipe.ingredient_id()));
+        rec.setQuantity(recipe.quantity());
+        return recipeRepo.save(rec);
+    }
+
+    public void delete(RecipeDto recipe) throws ItemNotFoundException {
+        RecipeId id = new RecipeId(
+                ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException("no ingredient with id " + recipe.ingredient_id())),
+                cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException("no cocktail with id " + recipe.cocktail_id()))
+        );
+        recipeRepo.deleteById(id);
+    }
 }
