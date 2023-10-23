@@ -1,7 +1,9 @@
 package com.alsab.boozycalc.service;
 
+import com.alsab.boozycalc.dto.CocktailDto;
 import com.alsab.boozycalc.entity.CocktailEntity;
 import com.alsab.boozycalc.entity.CocktailTypeEntity;
+import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.repository.CocktailRepo;
 import com.alsab.boozycalc.repository.CocktailTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,15 @@ public class CocktailService {
 
     public CocktailEntity add(CocktailEntity cocktail){
         return cocktailRepo.save(cocktail);
+    }
+
+    public CocktailEntity add(CocktailDto cocktail) throws ItemNotFoundException {
+        return add(new CocktailEntity(
+                cocktail.name(),
+                cocktail.description(),
+                cocktail.recipe_description(),
+                typeRepo.findById(cocktail.type_id()).orElseThrow(() -> new ItemNotFoundException("no type with id" + cocktail.type_id()))
+        ));
     }
 
     public Iterable<CocktailTypeEntity> findAllTypes(){
