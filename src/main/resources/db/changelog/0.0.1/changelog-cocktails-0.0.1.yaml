@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-cocktails-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: cocktails
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: recipe_description
+                  type: text
+              - column:
+                  name: type
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_type_id
+                    references: cocktail_types(id)
