@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-cocktailTypes-1
+      id: -cocktailTypes-1
       author: danil
       changes:
         - createTable:

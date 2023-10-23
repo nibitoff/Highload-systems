@@ -1,17 +1,18 @@
 databaseChangeLog:
-#  - include:
-#      file: db/changelog/0.0.1/changelog-ingredient-remove.yaml
-  - include:
-      file: db/changelog/0.0.1/changelog-ingredient-0.0.1.yaml
   - include:
       file: db/changelog/0.0.1/changelog-ingredientType-0.0.1.yaml
   - include:
       file: db/changelog/0.0.1/changelog-cocktailTypes-0.0.1.yaml
   - include:
-      file: db/changelog/0.0.1/changelog-cocktails-0.0.1.yaml
-  - include:
-      file: db/changelog/0.0.1/changelog-products-0.0.1.yaml
-  - include:
       file: db/changelog/0.0.1/changelog-parties-0.0.1.yaml
+
   - include:
-      file: db/changelog/0.0.1/changelog-purchases-0.0.1.yaml
+      file: db/changelog/0.0.2/changelog-ingredient-0.0.2.yaml
+  - include:
+      file: db/changelog/0.0.2/changelog-cocktails-0.0.2.yaml
+
+  - include:
+      file: db/changelog/0.0.3/changelog-products-0.0.3.yaml
+
+  - include:
+      file: db/changelog/0.0.4/changelog-purchases-0.0.4.yaml
