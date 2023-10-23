@@ -5,11 +5,18 @@ databaseChangeLog:
       file: db/changelog/0.0.1/changelog-cocktailTypes-0.0.1.yaml
   - include:
       file: db/changelog/0.0.1/changelog-parties-0.0.1.yaml
+  - include:
+      file: db/changelog/0.0.1/changelog-users-0.0.1.yaml
+  - include:
+      file: db/changelog/0.0.1/changelog-roles-0.0.1.yaml
+
 
   - include:
       file: db/changelog/0.0.2/changelog-ingredient-0.0.2.yaml
   - include:
       file: db/changelog/0.0.2/changelog-cocktails-0.0.2.yaml
+  - include:
+      file: db/changelog/0.0.2/changelog-userToRole-0.0.2.yaml
 
   - include:
       file: db/changelog/0.0.3/changelog-products-0.0.3.yaml

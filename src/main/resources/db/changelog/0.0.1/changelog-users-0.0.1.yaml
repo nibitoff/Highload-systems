@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: text
+              - column:
+                  name: password
+                  type: text
+              - column:
+                  name: real_name
+                  type: text
+

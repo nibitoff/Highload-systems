@@ -1,7 +1,11 @@
 package com.alsab.boozycalc.entity;
 
 import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "users_to_roles")
 public class UserRoleEntity {
     @EmbeddedId
     private UserRoleId id;
