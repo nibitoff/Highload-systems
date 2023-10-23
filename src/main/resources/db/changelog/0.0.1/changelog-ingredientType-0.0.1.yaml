@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-ingredientsType-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: ingredient_types
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
