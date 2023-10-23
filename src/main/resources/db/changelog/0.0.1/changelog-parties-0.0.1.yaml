@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-parties-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: parties
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+              - column:
+                  name: event_date
+                  type: timestamp
+              - column:
+                  name: location
+                  type: text
+              - column:
+                  name: description
+                  type: text

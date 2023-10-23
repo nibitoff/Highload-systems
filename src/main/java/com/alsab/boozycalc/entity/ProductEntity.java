@@ -12,8 +12,9 @@ public class ProductEntity {
     private String name;
     @Column(name = "description")
     private String description;
-    @Column(name = "ingredient_id")
-    private Long ingredient_id;
+    @ManyToOne
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
+    private IngredientEntity ingredient_id;
     @Column(name = "price")
     private float price;
 
@@ -45,11 +46,11 @@ public class ProductEntity {
         this.description = description;
     }
 
-    public Long getIngredientId() {
+    public IngredientEntity getIngredientId() {
         return ingredient_id;
     }
 
-    public void setIngredientId(Long ingredient_id) {
+    public void setIngredientId(IngredientEntity ingredient_id) {
         this.ingredient_id = ingredient_id;
     }
 
