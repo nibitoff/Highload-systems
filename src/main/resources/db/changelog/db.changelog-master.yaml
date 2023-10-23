@@ -17,6 +17,8 @@ databaseChangeLog:
       file: db/changelog/0.0.2/changelog-cocktails-0.0.2.yaml
   - include:
       file: db/changelog/0.0.2/changelog-userToRole-0.0.2.yaml
+  - include:
+      file: db/changelog/0.0.2/changelog-menus-0.0.2.yaml
 
   - include:
       file: db/changelog/0.0.3/changelog-products-0.0.3.yaml
