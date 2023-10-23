@@ -1,5 +1,6 @@
 package com.alsab.boozycalc.entity;
 
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,10 +8,15 @@ import jakarta.persistence.*;
 public class IngredientEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id")
         private Long id;
+        @Column(name = "name")
         private  String name;
+        @Column(name = "description")
         private  String description;
-        private  Long type;
+        @ManyToOne
+        @JoinColumn(name = "type_id", referencedColumnName = "id")
+        private IngredientTypeEntity type;
 
         public IngredientEntity(){
 
@@ -39,11 +45,11 @@ public class IngredientEntity {
                 this.description = description;
         }
 
-        public Long getType() {
+        public IngredientTypeEntity getType() {
                 return type;
         }
 
-        public void setType(Long type) {
+        public void setType(IngredientTypeEntity type) {
                 this.type = type;
         }
 }

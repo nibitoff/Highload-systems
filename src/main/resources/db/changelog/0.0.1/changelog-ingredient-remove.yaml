@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: danil
+      preConditions:
+        onFail: MARK_RAN
+        tableExists:
+          tableName: ingredients
+      comment: Remove ingredients table if exists
+      changes:
+        - dropTable:
+            tableName: ingredients
