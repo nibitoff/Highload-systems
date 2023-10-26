@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-menu-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: menus
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cocktail_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cocktail_id
+                    references: cocktails(id)
+              - column:
+                  name: party_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_party_id
+                    references: parties(id)
+
