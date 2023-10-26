@@ -1,21 +1,30 @@
 package com.alsab.boozycalc.service;
 
+import com.alsab.boozycalc.dto.IngredientDto;
 import com.alsab.boozycalc.entity.IngredientEntity;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.repository.IngredientRepo;
+import com.alsab.boozycalc.repository.IngredientTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class IngredientService {
-    @Autowired
-    private IngredientRepo ingredientRepo;
+    private final IngredientRepo ingredientRepo;
+    private final IngredientTypeRepo ingredientTypeRepo;
 
+
+    @Autowired
+    public IngredientService(IngredientRepo ingredientRepo, IngredientTypeRepo ingredientTypeRepo) {
+        this.ingredientRepo = ingredientRepo;
+        this.ingredientTypeRepo = ingredientTypeRepo;
+    }
     public Iterable<IngredientEntity> findAll() {
         return ingredientRepo.findAll();
     }
 
-    public IngredientEntity addIngredient(IngredientEntity ingredient) {
+    public IngredientEntity addIngredient(IngredientEntity ingredient) throws ItemNotFoundException {
+        if(ingredientTypeRepo.findById(ingredient.getType().getId()).isEmpty()) throw new ItemNotFoundException("no ingredient type with id " + ingredient.getType().getId());
         return ingredientRepo.save(ingredient);
     }
 

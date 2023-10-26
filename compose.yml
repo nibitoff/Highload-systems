@@ -1,0 +1,12 @@
+services:
+  db:
+    env_file:
+      - .env
+    image: 'postgres:13.3'
+    container_name: db
+    environment:
+      POSTGRES_USER: ${DOCKER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASSWORD}
+      POSTGRES_DB: "boozyCalcTest"
+    ports:
+      - 5432:5432

@@ -15,7 +15,7 @@ public class IngredientEntity {
         @Column(name = "description")
         private  String description;
         @ManyToOne
-        @JoinColumn(name = "type_id", referencedColumnName = "id")
+        @JoinColumn(name = "type", referencedColumnName = "id")
         private IngredientTypeEntity type;
 
         public IngredientEntity(){
