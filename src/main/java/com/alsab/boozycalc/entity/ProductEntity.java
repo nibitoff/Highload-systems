@@ -22,6 +22,9 @@ public class ProductEntity {
 
     }
 
+    public ProductEntity(String name, String description, IngredientEntity ingredientEntity, float price) {
+    }
+
     public Long getId() {
         return id;
     }
