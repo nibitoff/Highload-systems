@@ -24,7 +24,7 @@ public class IngredientService {
         ingr.setName(ingredient.getName());
         ingr.setDescription(ingredient.getDescription());
         ingr.setType(ingredient.getType());
-        return ingredientRepo.save(ingredient);
+        return ingredientRepo.save(ingr);
     }
 
     public void deleteIngredient(Long ingredientId) {
