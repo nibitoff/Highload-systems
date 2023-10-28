@@ -2,6 +2,7 @@ package com.alsab.boozycalc;
 
 import com.alsab.boozycalc.repository.IngredientRepo;
 import com.alsab.boozycalc.repository.IngredientTypeRepo;
+import com.alsab.boozycalc.repository.ProductRepo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockServletContext;
@@ -34,11 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Testcontainers
 @RequiredArgsConstructor
 @Getter
-public class MockMvcTestContainersTest {
+public abstract class MockMvcTestContainersTest implements Extension {
     private MockMvc mockMvc;
     private final WebApplicationContext webApplicationContext;
-    private final IngredientRepo ingredientRepo;
-    private final IngredientTypeRepo ingredientTypeRepo;
     private final EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
