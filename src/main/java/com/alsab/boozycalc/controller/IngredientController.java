@@ -1,30 +1,26 @@
 package com.alsab.boozycalc.controller;
 
 import com.alsab.boozycalc.dto.IngredientDto;
-import com.alsab.boozycalc.entity.IngredientEntity;
-import com.alsab.boozycalc.entity.IngredientTypeEntity;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
+import com.alsab.boozycalc.service.IngredientService;
+import com.alsab.boozycalc.service.data.IngredientDataService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/ingredients")
+@RequiredArgsConstructor
 public class IngredientController {
     private final IngredientService ingredientService;
+    private final IngredientDataService ingredientDataService;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public IngredientController(IngredientService ingredientService, ModelMapper modelMapper) {
-        this.ingredientService = ingredientService;
-        this.modelMapper = modelMapper;
-    }
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllIngredients() {
         try {
-            return ResponseEntity.ok(ingredientService.findAll());
+            return ResponseEntity.ok(ingredientDataService.findAll());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
@@ -33,16 +29,16 @@ public class IngredientController {
     @PostMapping("/add")
     public ResponseEntity<?> addNewIngredient(@RequestBody IngredientDto ingredient) {
         try {
-            return ResponseEntity.ok(ingredientService.addIngredient(convertToEntity(ingredient)));
+            return ResponseEntity.ok(ingredientService.add(ingredient));
         } catch (ItemNotFoundException e) {
             return ResponseEntity.badRequest().body(e);
         }
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editIngredient(@RequestBody IngredientEntity ingredient) {
+    public ResponseEntity<?> editIngredient(@RequestBody IngredientDto ingredient) {
         try {
-            return ResponseEntity.ok(ingredientService.editIngredient(ingredient));
+            return ResponseEntity.ok(ingredientService.edit(ingredient));
         } catch (ItemNotFoundException e) {
             return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
         }
@@ -51,22 +47,10 @@ public class IngredientController {
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteIngredient(Long id) {
         try {
-            ingredientService.deleteIngredient(id);
+            ingredientDataService.deleteById(id);
             return ResponseEntity.ok(id);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
-    }
-
-    private IngredientEntity convertToEntity(IngredientDto dto){
-        IngredientEntity ingredient = modelMapper.map(dto, IngredientEntity.class);
-        ingredient.setType(new IngredientTypeEntity(dto.getType_id(), ""));
-        return ingredient;
-    }
-
-    private IngredientDto convertToDto(IngredientEntity ingredient){
-        IngredientDto dto = modelMapper.map(ingredient, IngredientDto.class);
-        dto.setType_id(ingredient.getType().getId());
-        return dto;
     }
 }
