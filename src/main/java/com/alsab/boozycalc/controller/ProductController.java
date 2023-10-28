@@ -1,23 +1,26 @@
 package com.alsab.boozycalc.controller;
 
+import com.alsab.boozycalc.dto.ProductDto;
 import com.alsab.boozycalc.entity.ProductEntity;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.ProductService;
+import com.alsab.boozycalc.service.data.ProductDataService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/products")
+@RequiredArgsConstructor
 public class ProductController {
-
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+    private final ProductDataService productDataService;
 
     @GetMapping("/all")
-    public ResponseEntity getProducts() {
+    public ResponseEntity<?> getProducts() {
         try {
-            return ResponseEntity.ok(productService.findAll());
+            return ResponseEntity.ok(productDataService.findAll());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
@@ -26,7 +29,7 @@ public class ProductController {
     @DeleteMapping("/delete")
     public ResponseEntity deleteProductById(@RequestParam Long id) {
         try {
-            productService.deleteProduct(id);
+            productDataService.deleteById(id);
             return ResponseEntity.ok(id);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
@@ -34,9 +37,9 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addProduct(@RequestBody ProductEntity product) {
+    public ResponseEntity addProduct(@RequestBody ProductDto product) {
         try {
-            productService.addProduct(product);
+            productService.add(product);
             return ResponseEntity.ok("product successfully added");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
@@ -44,9 +47,9 @@ public class ProductController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity editProduct(@RequestBody ProductEntity product) {
+    public ResponseEntity editProduct(@RequestBody ProductDto product) {
         try {
-            productService.editProduct(product);
+            productService.edit(product);
             return ResponseEntity.ok("product successfully added");
         } catch (ItemNotFoundException e) {
             return ResponseEntity.badRequest().body("ERROR " + e.getMessage());

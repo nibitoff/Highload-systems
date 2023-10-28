@@ -4,12 +4,9 @@ import com.alsab.boozycalc.dto.IngredientDto;
 import com.alsab.boozycalc.entity.IngredientEntity;
 import com.alsab.boozycalc.entity.IngredientTypeEntity;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
-import com.alsab.boozycalc.service.IngredientService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
