@@ -1,5 +1,7 @@
 package com.alsab.boozycalc.service;
 
+import com.alsab.boozycalc.dto.CocktailDto;
+import com.alsab.boozycalc.dto.IngredientDto;
 import com.alsab.boozycalc.dto.RecipeDto;
 import com.alsab.boozycalc.entity.RecipeEntity;
 import com.alsab.boozycalc.entity.RecipeId;
@@ -32,26 +34,26 @@ public class RecipeService {
     public RecipeEntity add(RecipeDto recipe) throws ItemNotFoundException {
         return add(new RecipeEntity(
                 new RecipeId(
-                        ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException("no ingredient with id " + recipe.ingredient_id())),
-                        cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException("no ingredient with id " + recipe.ingredient_id()))
+                        ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException(IngredientDto.class, recipe.ingredient_id())),
+                        cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException(IngredientDto.class, recipe.ingredient_id()))
                 ), recipe.quantity()
         ));
     }
 
     public RecipeEntity edit(RecipeDto recipe) throws ItemNotFoundException {
         RecipeId id = new RecipeId(
-                    ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException("no ingredient with id " + recipe.ingredient_id())),
-                    cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException("no cocktail with id " + recipe.cocktail_id()))
+                    ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException(IngredientDto.class, recipe.ingredient_id())),
+                    cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException(CocktailDto.class, recipe.cocktail_id()))
                 );
-        RecipeEntity rec = recipeRepo.findById(id).orElseThrow(() -> new ItemNotFoundException("no recipe relation for cocktail " + recipe.cocktail_id() + " and ingredient " + recipe.ingredient_id()));
+        RecipeEntity rec = recipeRepo.findById(id).orElseThrow(() -> new RuntimeException("no recipe relation for cocktail " + recipe.cocktail_id() + " and ingredient " + recipe.ingredient_id()));
         rec.setQuantity(recipe.quantity());
         return recipeRepo.save(rec);
     }
 
     public void delete(RecipeDto recipe) throws ItemNotFoundException {
         RecipeId id = new RecipeId(
-                ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException("no ingredient with id " + recipe.ingredient_id())),
-                cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException("no cocktail with id " + recipe.cocktail_id()))
+                ingredientRepo.findById(recipe.ingredient_id()).orElseThrow(() -> new ItemNotFoundException(IngredientDto.class, recipe.ingredient_id())),
+                cocktailRepo.findById(recipe.cocktail_id()).orElseThrow(() -> new ItemNotFoundException(CocktailDto.class,  recipe.cocktail_id()))
         );
         recipeRepo.deleteById(id);
     }

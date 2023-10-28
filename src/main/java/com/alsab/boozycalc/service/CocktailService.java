@@ -30,7 +30,7 @@ public class CocktailService {
                 cocktail.name(),
                 cocktail.description(),
                 cocktail.recipe_description(),
-                typeRepo.findById(cocktail.type_id()).orElseThrow(() -> new ItemNotFoundException("no type with id" + cocktail.type_id()))
+                typeRepo.findById(cocktail.type_id()).orElseThrow(() -> new ItemNotFoundException(CocktailDto.class, cocktail.id()))
         ));
     }
 
