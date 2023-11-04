@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: roles-in-users-1
+      author: danandla
+      changes:
+        - addColumn:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: users
+            columns:
+            - column:
+                name: role
+                type: varchar(50)
+        - dropTable:
+            cascadeConstraints: true
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: users_to_roles

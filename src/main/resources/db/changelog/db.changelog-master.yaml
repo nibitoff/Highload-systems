@@ -36,3 +36,6 @@ databaseChangeLog:
       file: db/changelog/0.0.5/changelog-orderEntry-0.0.5.yaml
   - include:
       file: db/changelog/0.0.5/changelog-userToRoles-0.0.5.yaml
+
+  - include:
+      file: db/changelog/0.0.6/changelog-user-0.0.6.yaml

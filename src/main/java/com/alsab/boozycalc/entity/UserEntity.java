@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Table(name = "users")
 @Data
@@ -26,9 +24,7 @@ public class UserEntity {
     @Column(name = "real_name")
     private String realName;
 
-    @ElementCollection(targetClass = RoleEnum.class)
-    @JoinTable(name = "users_to_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    List<RoleEnum> roles;
+    RoleEnum role;
 }
