@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: use-roles-enum-1
+      author: danandla
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableCatalogName: boozyCalc
+            baseTableName: users_to_roles
+            baseTableSchemaName: public
+            constraintName: fk_role_id
+        - modifyDataType:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: users_to_roles
+            columnName: role_id
+            newDataType: text
+        - renameColumn:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: users_to_roles
+            columnDataType: text
+            oldColumnName: role_id
+            newColumnName: role
+        - dropTable:
+            cascadeConstraints: true
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: roles
