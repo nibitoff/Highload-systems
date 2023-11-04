@@ -28,7 +28,7 @@ public class UserEntity {
 
     @ElementCollection(targetClass = RoleEnum.class)
     @JoinTable(name = "users_to_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "roles", nullable = false)
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     List<RoleEnum> roles;
 }
