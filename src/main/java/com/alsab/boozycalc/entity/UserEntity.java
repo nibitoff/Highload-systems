@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CollectionId;
 
-import javax.management.relation.Role;
 import java.util.List;
 
 @Entity
@@ -29,7 +27,7 @@ public class UserEntity {
     private String realName;
 
     @ElementCollection(targetClass = RoleEnum.class)
-    @JoinTable(name = "user_to_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "users_to_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "roles", nullable = false)
     @Enumerated(EnumType.STRING)
     List<RoleEnum> roles;
