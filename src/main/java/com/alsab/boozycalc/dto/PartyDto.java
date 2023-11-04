@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class CocktailDto{
+@NoArgsConstructor
+public class PartyDto {
     private Long id;
     private String name;
+    private java.sql.Timestamp event_date;
+    private String location;
     private String description;
-    private String recipe_description;
-    private CocktailTypeDto type_id;
 }

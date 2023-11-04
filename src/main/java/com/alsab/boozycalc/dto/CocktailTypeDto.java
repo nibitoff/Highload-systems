@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CocktailDto{
+public class CocktailTypeDto {
     private Long id;
     private String name;
     private String description;
-    private String recipe_description;
-    private CocktailTypeDto type_id;
 }

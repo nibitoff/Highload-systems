@@ -6,38 +6,25 @@ import com.alsab.boozycalc.entity.CocktailTypeEntity;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.repository.CocktailRepo;
 import com.alsab.boozycalc.repository.CocktailTypeRepo;
+import com.alsab.boozycalc.service.data.CocktailDataService;
+import com.alsab.boozycalc.service.data.CocktailTypeDataService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CocktailService {
-    @Autowired
-    CocktailRepo cocktailRepo;
+    private final CocktailDataService cocktailDataService;
+    private final CocktailTypeDataService cocktailTypeDataService;
 
-    @Autowired
-    CocktailTypeRepo typeRepo;
-
-    public Iterable<CocktailEntity> findAll(){
-        return cocktailRepo.findAll();
+    public CocktailDto add(CocktailDto dto){
+        cocktailTypeDataService.findById(dto.getType_id().getId());
+        return cocktailDataService.add(dto);
     }
 
-    public CocktailEntity add(CocktailEntity cocktail){
-        return cocktailRepo.save(cocktail);
-    }
-
-    public CocktailEntity add(CocktailDto cocktail) throws ItemNotFoundException {
-        return add(new CocktailEntity(
-                cocktail.name(),
-                cocktail.description(),
-                cocktail.recipe_description(),
-                typeRepo.findById(cocktail.type_id()).orElseThrow(() -> new ItemNotFoundException(CocktailDto.class, cocktail.id()))
-        ));
-    }
-
-    public Iterable<CocktailTypeEntity> findAllTypes(){
-        return typeRepo.findAll();
-    }
-    public CocktailTypeEntity addType(CocktailTypeEntity type){
-        return typeRepo.save(type);
+    public CocktailDto edit(CocktailDto dto){
+        cocktailTypeDataService.findById(dto.getType_id().getId());
+        return cocktailDataService.edit(dto);
     }
 }
