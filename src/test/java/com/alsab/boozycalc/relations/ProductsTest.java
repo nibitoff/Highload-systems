@@ -7,6 +7,7 @@ import com.alsab.boozycalc.repository.IngredientRepo;
 import com.alsab.boozycalc.repository.IngredientTypeRepo;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
@@ -20,6 +21,7 @@ public class ProductsTest extends MockMvcTestContainersTest {
     private final IngredientTypeRepo ingredientTypeRepo;
     private final IngredientRepo ingredientRepo;
 
+    @Autowired
     public ProductsTest(WebApplicationContext webApplicationContext, EntityManagerFactory entityManagerFactory, IngredientTypeRepo ingredientTypeRepo, IngredientRepo ingredientRepo) {
         super(webApplicationContext, entityManagerFactory);
         this.ingredientTypeRepo = ingredientTypeRepo;

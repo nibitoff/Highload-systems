@@ -47,13 +47,15 @@ public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
         type1.setName("tiki");
         type1.setId(ingredientTypeRepo.save(type1).getId());
 
+        System.out.println(type1.getId());
+
         final String body = """
                 {
                     "id": 0,
                     "name": "rum",
                     "description": "",
-                    "type_id":
-                """ + type1.getId() + "}";
+                    "type":{ "id":
+                """ + type1.getId() + "}}";
 
         super.getMockMvc().perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isOk()).andDo(System.out::println);
     }
@@ -69,7 +71,8 @@ public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
                     "id": 0,
                     "name": "rum",
                     "description": "для вас означает",
-                    "type_id": 1
+                    "type_id": {
+                    "id": 1"}
                 }
                 """;
         super.getMockMvc().perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isBadRequest()).andDo(System.out::println);
