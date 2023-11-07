@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IngredientRepo extends CrudRepository<IngredientEntity, Long> {
+public interface IngredientRepo extends JpaRepository<IngredientEntity, Long> {
 
 }
