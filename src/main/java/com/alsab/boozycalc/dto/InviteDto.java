@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InviteDto {
-    private PartyEntity party;
-    private UserEntity person;
+    private PartyDto party;
+    private UserDto person;
 }
