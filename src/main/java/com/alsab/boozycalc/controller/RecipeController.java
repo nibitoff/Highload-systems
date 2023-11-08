@@ -1,21 +1,24 @@
 package com.alsab.boozycalc.controller;
 
 import com.alsab.boozycalc.dto.RecipeDto;
+import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.RecipeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.alsab.boozycalc.service.data.RecipeDataService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/recipes")
+@RequiredArgsConstructor
 public class RecipeController {
-    @Autowired
-    private RecipeService recipeService;
+    private final RecipeService recipeService;
+    private final RecipeDataService recipeDataService;
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllRecipes() {
         try {
-            return ResponseEntity.ok(recipeService.findAll());
+            return ResponseEntity.ok(recipeDataService.findAll());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
@@ -24,7 +27,8 @@ public class RecipeController {
     @PostMapping("/add")
     public ResponseEntity<?> addNewRecipe(@RequestBody RecipeDto recipe) {
         try {
-            return ResponseEntity.ok(recipeService.add(recipe));
+            recipeService.add(recipe);
+            return ResponseEntity.ok("recipe successfully added");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
@@ -33,9 +37,10 @@ public class RecipeController {
     @PostMapping("/edit")
     public ResponseEntity<?> editRecipe(@RequestBody RecipeDto recipe) {
         try {
-            return ResponseEntity.ok(recipeService.edit(recipe));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            recipeService.edit(recipe);
+            return ResponseEntity.ok("recipe successfully edited");
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
         }
     }
 
