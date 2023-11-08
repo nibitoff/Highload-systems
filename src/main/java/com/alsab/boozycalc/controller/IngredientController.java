@@ -1,6 +1,7 @@
 package com.alsab.boozycalc.controller;
 
 import com.alsab.boozycalc.dto.IngredientDto;
+import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.IngredientService;
 import com.alsab.boozycalc.service.data.IngredientDataService;
@@ -30,7 +31,9 @@ public class IngredientController {
     public ResponseEntity<?> addNewIngredient(@RequestBody IngredientDto ingredient) {
         try {
             return ResponseEntity.ok(ingredientService.add(ingredient));
-        } catch (ItemNotFoundException e) {
+        } catch (ItemNameIsAlreadyTakenException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
     }
@@ -40,7 +43,11 @@ public class IngredientController {
         try {
             return ResponseEntity.ok(ingredientService.edit(ingredient));
         } catch (ItemNotFoundException e) {
-            return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (ItemNameIsAlreadyTakenException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
         }
     }
 
@@ -49,6 +56,8 @@ public class IngredientController {
         try {
             ingredientDataService.deleteById(id);
             return ResponseEntity.ok(id);
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }

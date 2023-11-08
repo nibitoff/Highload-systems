@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: change-recipedescr-to-steps-1
+      author: danandla
+      changes:
+      - renameColumn:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: cocktails
+            oldColumnName: recipe_description
+            newColumnName: steps

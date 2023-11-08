@@ -1,14 +1,15 @@
 package com.alsab.boozycalc.service.data;
 
 import com.alsab.boozycalc.dto.CocktailDto;
-import com.alsab.boozycalc.dto.IngredientDto;
+import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
+import com.alsab.boozycalc.exception.ItemNotFoundByNameException;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.mapper.CocktailMapper;
-import com.alsab.boozycalc.mapper.IngredientMapper;
 import com.alsab.boozycalc.repository.CocktailRepo;
-import com.alsab.boozycalc.repository.IngredientRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,26 @@ public class CocktailDataService {
         );
     }
 
+    public CocktailDto findByName(String name) {
+        return mapper.cocktailToDto(
+                repo.findByName(name).orElseThrow(() -> new ItemNotFoundByNameException(CocktailDto.class, name))
+        );
+    }
+
+    public Boolean existsByName(String name){
+        try {
+            findByName(name);
+            return true;
+        } catch (ItemNotFoundByNameException e) {
+            return false;
+        }
+    }
+
     public CocktailDto add(CocktailDto dto) {
+        if(existsByName(dto.getName())){
+            throw new ItemNameIsAlreadyTakenException(CocktailDto.class, dto.getName());
+        }
+
         return mapper.cocktailToDto(
                 repo.save(
                         mapper.dtoToCocktail(dto)
@@ -38,9 +58,17 @@ public class CocktailDataService {
         CocktailDto cockt = mapper.cocktailToDto(
                 repo.findById(cocktail.getId()).orElseThrow(() -> new ItemNotFoundException(CocktailDto.class, cocktail.getId()))
         );
+
+        if(existsByName(cocktail.getName())){
+            CocktailDto other = findByName(cocktail.getName());
+            if(!Objects.equals(other.getId(), cocktail.getId()))
+                throw new ItemNameIsAlreadyTakenException(CocktailDto.class, cocktail.getName());
+        }
+
         cockt.setName(cocktail.getName());
         cockt.setDescription(cocktail.getDescription());
-        cockt.setRecipe_description(cocktail.getRecipe_description());
+        cockt.setSteps(cocktail.getSteps());
+        cockt.setType(cocktail.getType());
         cockt.setId(cocktail.getId());
         return mapper.cocktailToDto(
                 repo.save(mapper.dtoToCocktail(cockt))

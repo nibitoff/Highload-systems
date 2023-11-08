@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: constraints-1
+      author: danandla
+      changes:
+      - addUniqueConstraint:
+          catalogName: boozyCalc
+          schemaName: public
+          tableName: cocktails
+          columnNames: name
+          constraintName: unique_cocktail_name
+      - addUniqueConstraint:
+          catalogName: boozyCalc
+          schemaName: public
+          tableName: ingredients
+          columnNames: name
+          constraintName: unique_ingredient_name
+      - addUniqueConstraint:
+          catalogName: boozyCalc
+          schemaName: public
+          tableName: products
+          columnNames: name
+          constraintName: unique_product_name
+      - addUniqueConstraint:
+          catalogName: boozyCalc
+          schemaName: public
+          tableName: parties
+          columnNames: name
+          constraintName: unique_party_name
+      - addUniqueConstraint:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: users
+            columnNames: username
+            constraintName: unique_user_name
