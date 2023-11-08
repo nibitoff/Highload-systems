@@ -12,5 +12,5 @@ public class CocktailDto{
     private String name;
     private String description;
     private String recipe_description;
-    private CocktailTypeDto type_id;
+    private CocktailTypeDto type;
 }

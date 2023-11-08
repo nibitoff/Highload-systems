@@ -19,12 +19,12 @@ public class CocktailService {
     private final CocktailTypeDataService cocktailTypeDataService;
 
     public CocktailDto add(CocktailDto dto){
-        cocktailTypeDataService.findById(dto.getType_id().getId());
+        cocktailTypeDataService.findById(dto.getType().getId());
         return cocktailDataService.add(dto);
     }
 
     public CocktailDto edit(CocktailDto dto){
-        cocktailTypeDataService.findById(dto.getType_id().getId());
+        cocktailTypeDataService.findById(dto.getType().getId());
         return cocktailDataService.edit(dto);
     }
 }
