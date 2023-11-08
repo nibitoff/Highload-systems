@@ -50,7 +50,7 @@ public class ProductController {
     public ResponseEntity editProduct(@RequestBody ProductDto product) {
         try {
             productService.edit(product);
-            return ResponseEntity.ok("product successfully added");
+            return ResponseEntity.ok("product successfully edited");
         } catch (ItemNotFoundException e) {
             return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
         }
