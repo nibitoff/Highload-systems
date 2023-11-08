@@ -39,3 +39,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/0.0.6/changelog-user-0.0.6.yaml
+
+  - include:
+      file: db/changelog/0.0.7/changelog-constraints-0.0.7.yaml
