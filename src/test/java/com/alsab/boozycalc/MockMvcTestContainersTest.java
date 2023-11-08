@@ -63,7 +63,7 @@ public abstract class MockMvcTestContainersTest implements Extension {
         entityManager.getTransaction().begin();
         tables.forEach(table -> {
                     if (table != "databasechangelog" && table != "databasechangeloglock") {
-                        entityManager.createNativeQuery("TRUNCATE TABLE " + table + " CASCADE").executeUpdate();
+                        entityManager.createNativeQuery("TRUNCATE TABLE " + table + " RESTART IDENTITY CASCADE").executeUpdate();
                     }
                 }
         );

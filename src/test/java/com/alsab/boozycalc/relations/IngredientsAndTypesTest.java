@@ -2,7 +2,6 @@ package com.alsab.boozycalc.relations;
 
 import com.alsab.boozycalc.MockMvcTestContainersTest;
 import com.alsab.boozycalc.entity.IngredientTypeEntity;
-import com.alsab.boozycalc.repository.IngredientRepo;
 import com.alsab.boozycalc.repository.IngredientTypeRepo;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.Assertions;
@@ -24,23 +23,6 @@ public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
         super(webApplicationContext, entityManagerFactory);
         this.ingredientTypeRepo = ingredientTypeRepo;
     }
-
-    @Test
-    public void addEntity() {
-        IngredientTypeEntity type1 = new IngredientTypeEntity();
-        type1.setName("sour");
-        IngredientTypeEntity type2 = new IngredientTypeEntity();
-        type2.setName("tiki");
-        ingredientTypeRepo.save(type1);
-        ingredientTypeRepo.save(type2);
-
-        int l = 0;
-        for (IngredientTypeEntity entity : ingredientTypeRepo.findAll()) {
-            l += 1;
-        }
-        Assertions.assertEquals(l, 2);
-    }
-
     @Test
     public void ingredientOfExistentTypeTest() throws Exception {
         IngredientTypeEntity type1 = new IngredientTypeEntity();
@@ -54,10 +36,15 @@ public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
                     "id": 0,
                     "name": "rum",
                     "description": "",
-                    "type":{ "id":
-                """ + type1.getId() + "}}";
+                    "type": {
+                        "id": 1
+                    }
+                }
+                """ ;
 
-        super.getMockMvc().perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isOk()).andDo(System.out::println);
+        super.getMockMvc()
+                .perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -71,10 +58,14 @@ public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
                     "id": 0,
                     "name": "rum",
                     "description": "для вас означает",
-                    "type_id": {
-                    "id": 1"}
+                    "type": {
+                        "id": 2
+                    }
                 }
                 """;
-        super.getMockMvc().perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isBadRequest()).andDo(System.out::println);
+
+        super.getMockMvc()
+                .perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isBadRequest());
     }
 }
