@@ -4,11 +4,17 @@ package com.alsab.boozycalc.entity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Data
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class RecipeId implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
@@ -17,31 +23,6 @@ public class RecipeId implements Serializable {
     @ManyToOne
     @JoinColumn(name = "cocktail_id", referencedColumnName = "id")
     private CocktailEntity cocktail;
-
-    public RecipeId() {
-
-    }
-
-    public RecipeId(IngredientEntity ingredient, CocktailEntity cocktail) {
-        this.ingredient = ingredient;
-        this.cocktail = cocktail;
-    }
-
-    public IngredientEntity getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(IngredientEntity ingredient) {
-        this.ingredient = ingredient;
-    }
-
-    public CocktailEntity getCocktail() {
-        return cocktail;
-    }
-
-    public void setCocktail(CocktailEntity cocktail) {
-        this.cocktail = cocktail;
-    }
 
     @Override
     public boolean equals(Object o) {
