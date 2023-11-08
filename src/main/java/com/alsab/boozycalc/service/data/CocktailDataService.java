@@ -41,7 +41,7 @@ public class CocktailDataService {
         cockt.setName(cocktail.getName());
         cockt.setDescription(cocktail.getDescription());
         cockt.setRecipe_description(cocktail.getRecipe_description());
-        cockt.setType_id(cocktail.getType_id());
+        cockt.setId(cocktail.getId());
         return mapper.cocktailToDto(
                 repo.save(mapper.dtoToCocktail(cockt))
         );
