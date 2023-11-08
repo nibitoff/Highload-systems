@@ -11,6 +11,6 @@ public class CocktailDto{
     private Long id;
     private String name;
     private String description;
-    private String recipe_description;
+    private String steps;
     private CocktailTypeDto type;
 }
