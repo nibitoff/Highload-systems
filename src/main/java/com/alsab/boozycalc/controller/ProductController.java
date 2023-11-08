@@ -2,6 +2,7 @@ package com.alsab.boozycalc.controller;
 
 import com.alsab.boozycalc.dto.ProductDto;
 import com.alsab.boozycalc.entity.ProductEntity;
+import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.ProductService;
 import com.alsab.boozycalc.service.data.ProductDataService;
@@ -27,32 +28,38 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity deleteProductById(@RequestParam Long id) {
+    public ResponseEntity<?> deleteProductById(@RequestParam Long id) {
         try {
             productDataService.deleteById(id);
             return ResponseEntity.ok(id);
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
     }
 
     @PostMapping("/add")
-    public ResponseEntity addProduct(@RequestBody ProductDto product) {
+    public ResponseEntity<?> addProduct(@RequestBody ProductDto product) {
         try {
-            productService.add(product);
-            return ResponseEntity.ok("product successfully added");
+            return ResponseEntity.ok(productService.add(product));
+        } catch (ItemNameIsAlreadyTakenException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
     }
 
     @PostMapping("/edit")
-    public ResponseEntity editProduct(@RequestBody ProductDto product) {
+    public ResponseEntity<?> editProduct(@RequestBody ProductDto product) {
         try {
-            productService.edit(product);
-            return ResponseEntity.ok("product successfully added");
+            return ResponseEntity.ok(productService.edit(product));
         } catch (ItemNotFoundException e) {
-            return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (ItemNameIsAlreadyTakenException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
         }
     }
 }
