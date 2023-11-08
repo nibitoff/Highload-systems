@@ -25,7 +25,6 @@ public class PartyService {
     private final OrderDataService orderDataService;
 
     public PartyDto add(PartyDto dto){
-//        partyDataService.findById(dto.getId());
         return partyDataService.add(dto);
     }
 
