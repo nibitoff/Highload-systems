@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuDto {
-    private PartyEntity party;
-    private CocktailEntity cocktail;
+    private PartyDto party;
+    private CocktailDto cocktail;
 }
