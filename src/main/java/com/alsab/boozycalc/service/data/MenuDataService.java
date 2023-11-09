@@ -28,7 +28,7 @@ public class MenuDataService {
     }
 
     public MenuDto add(MenuDto menuDto){
-        return mapper.menuToDto((menuRepo.save(mapper.dtoToMenu(menuDto))));
+        return mapper.menuToDto(menuRepo.save(mapper.dtoToMenu(menuDto)));
     }
 
     public MenuDto edit(MenuDto dto){
