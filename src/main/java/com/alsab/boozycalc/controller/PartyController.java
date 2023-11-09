@@ -6,6 +6,7 @@ import com.alsab.boozycalc.exception.NoCocktailInMenuException;
 import com.alsab.boozycalc.exception.NoIngredientsForCocktailException;
 import com.alsab.boozycalc.service.PartyService;
 import com.alsab.boozycalc.service.data.PartyDataService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class PartyController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+    public ResponseEntity<?> getAllPartiesWithPagination(Integer page) {
         try {
             return ResponseEntity.ok(partyDataService.findAllWithPagination(page));
         } catch (Exception e) {
@@ -46,7 +47,7 @@ public class PartyController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addParty(@RequestBody PartyDto party) {
+    public ResponseEntity<?> addParty(@Valid @RequestBody PartyDto party) {
         try {
             partyService.add(party);
             return ResponseEntity.ok("party successfully added");
@@ -56,7 +57,7 @@ public class PartyController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editParty(@RequestBody PartyDto party) {
+    public ResponseEntity<?> editParty(@Valid @RequestBody PartyDto party) {
         try {
             partyService.edit(party);
             return ResponseEntity.ok("party successfully added");

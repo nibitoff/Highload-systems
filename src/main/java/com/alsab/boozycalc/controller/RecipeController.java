@@ -4,6 +4,7 @@ import com.alsab.boozycalc.dto.RecipeDto;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.RecipeService;
 import com.alsab.boozycalc.service.data.RecipeDataService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class RecipeController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+    public ResponseEntity<?> getAllRecipesWithPagination(Integer page) {
         try {
             return ResponseEntity.ok(recipeDataService.findAllWithPagination(page));
         } catch (Exception e) {
@@ -34,7 +35,7 @@ public class RecipeController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewRecipe(@RequestBody RecipeDto recipe) {
+    public ResponseEntity<?> addNewRecipe(@Valid @RequestBody RecipeDto recipe) {
         try {
             recipeService.add(recipe);
             return ResponseEntity.ok("recipe successfully added");
@@ -44,7 +45,7 @@ public class RecipeController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editRecipe(@RequestBody RecipeDto recipe) {
+    public ResponseEntity<?> editRecipe(@Valid @RequestBody RecipeDto recipe) {
         try {
             recipeService.edit(recipe);
             return ResponseEntity.ok("recipe successfully edited");

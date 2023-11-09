@@ -6,6 +6,7 @@ import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.ProductService;
 import com.alsab.boozycalc.service.data.ProductDataService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+    public ResponseEntity<?> getAllProductsWithPagination(Integer page) {
         try {
             return ResponseEntity.ok(productDataService.findAllWithPagination(page));
         } catch (Exception e) {
@@ -50,7 +51,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody ProductDto product) {
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDto product) {
         try {
             return ResponseEntity.ok(productService.add(product));
         } catch (ItemNameIsAlreadyTakenException e) {
@@ -61,7 +62,7 @@ public class ProductController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editProduct(@RequestBody ProductDto product) {
+    public ResponseEntity<?> editProduct(@Valid @RequestBody ProductDto product) {
         try {
             return ResponseEntity.ok(productService.edit(product));
         } catch (ItemNotFoundException e) {

@@ -5,6 +5,7 @@ import com.alsab.boozycalc.dto.RecipeDto;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.PurchaseService;
 import com.alsab.boozycalc.service.data.PurchaseDataService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class PurchaseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+    public ResponseEntity<?> getAllPurchasesWithPagination(Integer page) {
         try {
             return ResponseEntity.ok(purchaseDataService.findAllWithPagination(page));
         } catch (Exception e) {
@@ -35,7 +36,7 @@ public class PurchaseController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewPurchae(@RequestBody PurchaseDto purchase) {
+    public ResponseEntity<?> addNewPurchase(@Valid @RequestBody PurchaseDto purchase) {
         try {
             purchaseService.add(purchase);
             return ResponseEntity.ok("purchase successfully added");
@@ -45,7 +46,7 @@ public class PurchaseController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editPurchase(@RequestBody PurchaseDto purchase) {
+    public ResponseEntity<?> editPurchase(@Valid @RequestBody PurchaseDto purchase) {
         try {
             purchaseService.edit(purchase);
             return ResponseEntity.ok("purchase successfully edited");

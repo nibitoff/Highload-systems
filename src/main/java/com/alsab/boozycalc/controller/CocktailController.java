@@ -5,10 +5,18 @@ import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.CocktailService;
 import com.alsab.boozycalc.service.data.CocktailDataService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.Errors;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/cocktails")
@@ -47,7 +55,7 @@ public class CocktailController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewCocktail(@RequestBody CocktailDto cocktail) {
+    public ResponseEntity<?> addNewCocktail(@Valid @RequestBody CocktailDto cocktail) {
         try {
             return ResponseEntity.ok(cocktailService.add(cocktail));
         } catch (ItemNameIsAlreadyTakenException e) {
@@ -57,7 +65,7 @@ public class CocktailController {
         }
     }
     @PostMapping("/edit")
-    public ResponseEntity<?> editCocktail(@RequestBody CocktailDto cocktail) {
+    public ResponseEntity<?> editCocktail(@Valid @RequestBody CocktailDto cocktail) {
         try {
             return ResponseEntity.ok(cocktailService.edit(cocktail));
         } catch (ItemNotFoundException e) {
@@ -80,4 +88,5 @@ public class CocktailController {
             return ResponseEntity.badRequest().body(e);
         }
     }
+
 }

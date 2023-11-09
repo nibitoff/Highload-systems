@@ -5,6 +5,7 @@ import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.service.IngredientService;
 import com.alsab.boozycalc.service.data.IngredientDataService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class IngredientController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+    public ResponseEntity<?> getAllIngredientsWithPagination(Integer page) {
         try {
             return ResponseEntity.ok(ingredientDataService.findAllWithPagination(page));
         } catch (Exception e) {
@@ -37,7 +38,7 @@ public class IngredientController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewIngredient(@RequestBody IngredientDto ingredient) {
+    public ResponseEntity<?> addNewIngredient(@Valid @RequestBody IngredientDto ingredient) {
         try {
             return ResponseEntity.ok(ingredientService.add(ingredient));
         } catch (ItemNameIsAlreadyTakenException e) {
@@ -48,7 +49,7 @@ public class IngredientController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editIngredient(@RequestBody IngredientDto ingredient) {
+    public ResponseEntity<?> editIngredient(@Valid @RequestBody IngredientDto ingredient) {
         try {
             return ResponseEntity.ok(ingredientService.edit(ingredient));
         } catch (ItemNotFoundException e) {
