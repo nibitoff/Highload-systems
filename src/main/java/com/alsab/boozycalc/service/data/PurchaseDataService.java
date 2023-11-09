@@ -1,11 +1,14 @@
 package com.alsab.boozycalc.service.data;
 
+import com.alsab.boozycalc.dto.IngredientDto;
 import com.alsab.boozycalc.dto.PurchaseDto;
 import com.alsab.boozycalc.entity.PurchaseEntity;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.mapper.PurchaseMapper;
 import com.alsab.boozycalc.repository.PurchaseRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,6 +53,11 @@ public class PurchaseDataService {
             return mapper.purchaseToDto(
                 repo.findByParty(id).orElseThrow(() -> new ItemNotFoundException(PurchaseDto.class, id))
         );
+    }
+
+    public Iterable<PurchaseDto> findAllWithPagination(Integer page){
+        Pageable pageable = PageRequest.of(page, 50);
+        return repo.findAllWithPagination(pageable).stream().map(mapper::purchaseToDto).toList();
     }
 }
 
