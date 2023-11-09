@@ -3,8 +3,18 @@ package com.alsab.boozycalc.entity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+@Data
 @Embeddable
-public class OrderEntryId {
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderEntryId implements Serializable {
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private OrderEntity order;
@@ -13,24 +23,16 @@ public class OrderEntryId {
     @JoinColumn(name = "cocktail_id", referencedColumnName = "id")
     private CocktailEntity cocktail;
 
-    public OrderEntryId(OrderEntity order, CocktailEntity cocktail) {
-        this.order = order;
-        this.cocktail = cocktail;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderEntryId that = (OrderEntryId) o;
+        return Objects.equals(order, that.order) && Objects.equals(cocktail, that.cocktail);
     }
 
-    public OrderEntity getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderEntity order) {
-        this.order = order;
-    }
-
-    public CocktailEntity getCocktail() {
-        return cocktail;
-    }
-
-    public void setCocktail(CocktailEntity cocktail) {
-        this.cocktail = cocktail;
+    @Override
+    public int hashCode() {
+        return Objects.hash(order, cocktail);
     }
 }
