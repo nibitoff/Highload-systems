@@ -13,6 +13,6 @@ public class OrderDto {
     private Long id;
     private String name;
     private float price;
-    private PartyEntity party_id;
-    private UserEntity person_id;
+    private PartyEntity party;
+    private UserEntity person;
 }

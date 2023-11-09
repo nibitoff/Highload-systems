@@ -20,8 +20,8 @@ public class OrderEntity {
     private float price;
     @ManyToOne
     @JoinColumn(name = "party_id", referencedColumnName = "id")
-    private PartyEntity party_id;
+    private PartyEntity party;
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private UserEntity person_id;
+    private UserEntity person;
 }
