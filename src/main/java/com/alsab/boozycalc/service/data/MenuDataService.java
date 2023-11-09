@@ -37,15 +37,11 @@ public class MenuDataService {
         return mapper.menuToDto(menuRepo.save(menu));
     }
 
-    public MenuDto findByCocktail(Long id){
-        return mapper.menuToDto(
-                menuRepo.findByCocktail(id).orElseThrow(() -> new ItemNotFoundException(MenuDto.class, id))
-        );
+    public List<MenuDto> findAllByCocktail(Long id){
+        return menuRepo.findAllByCocktail(id).stream().map(mapper::menuToDto).toList();
     }
 
-    public MenuDto findByParty(Long id){
-        return mapper.menuToDto(
-                menuRepo.findByParty(id).orElseThrow(() -> new ItemNotFoundException(MenuDto.class, id))
-        );
+    public List<MenuDto> findByParty(Long id){
+        return menuRepo.findAllByParty(id).stream().map(mapper::menuToDto).toList();
     }
 }
