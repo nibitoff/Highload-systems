@@ -19,10 +19,19 @@ public class PartyController {
     private final PartyService partyService;
     private final PartyDataService partyDataService;
 
-    @GetMapping("/all")
+    @GetMapping("/allInOne")
     public ResponseEntity<?> getParties() {
         try {
             return ResponseEntity.ok(partyDataService.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+        try {
+            return ResponseEntity.ok(partyDataService.findAllWithPagination(page));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }

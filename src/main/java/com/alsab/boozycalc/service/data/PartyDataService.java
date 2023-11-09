@@ -1,5 +1,6 @@
 package com.alsab.boozycalc.service.data;
 
+import com.alsab.boozycalc.dto.IngredientDto;
 import com.alsab.boozycalc.dto.PartyDto;
 import com.alsab.boozycalc.dto.ProductDto;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
@@ -8,6 +9,8 @@ import com.alsab.boozycalc.mapper.ProductMapper;
 import com.alsab.boozycalc.repository.PartyRepo;
 import com.alsab.boozycalc.repository.ProductRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,5 +41,10 @@ public class PartyDataService {
     public PartyDto edit(PartyDto dto) {
         partyRepo.findById(dto.getId()).orElseThrow(() -> new ItemNotFoundException(PartyDto.class, dto.getId()));
         return mapper.partyToDto(partyRepo.save(mapper.dtoToParty(dto)));
+    }
+
+    public Iterable<PartyDto> findAllWithPagination(Integer page){
+        Pageable pageable = PageRequest.of(page, 50);
+        return partyRepo.findAllWithPagination(pageable).stream().map(mapper::partyToDto).toList();
     }
 }
