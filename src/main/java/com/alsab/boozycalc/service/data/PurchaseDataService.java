@@ -40,16 +40,12 @@ public class PurchaseDataService {
         return repo.findAll().stream().map(mapper::purchaseToDto).toList();
     }
 
-    public PurchaseDto findByProduct(Long id){
-        return mapper.purchaseToDto(
-                repo.findByProduct(id).orElseThrow(() -> new ItemNotFoundException(PurchaseDto.class, id))
-        );
+    public List<PurchaseDto> findAllByProduct(Long id){
+        return repo.findByProduct(id).stream().map(mapper::purchaseToDto).toList();
     }
 
-    public PurchaseDto findByParty(Long id){
-            return mapper.purchaseToDto(
-                repo.findByParty(id).orElseThrow(() -> new ItemNotFoundException(PurchaseDto.class, id))
-        );
+    public List<PurchaseDto> findAllByParty(Long id){
+            return repo.findByParty(id).stream().map(mapper::purchaseToDto).toList();
     }
 }
 
