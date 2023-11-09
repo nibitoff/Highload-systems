@@ -18,7 +18,7 @@ public class CocktailController {
     private final CocktailDataService cocktailDataService;
     private final ModelMapper modelMapper;
 
-    @GetMapping("/all")
+    @GetMapping("/allInOne")
     public ResponseEntity<?> getAllCocktails() {
         try {
             return ResponseEntity.ok(cocktailDataService.findAll());
@@ -26,6 +26,25 @@ public class CocktailController {
             return ResponseEntity.badRequest().body(e);
         }
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+        try {
+            return ResponseEntity.ok(cocktailDataService.findAllWithPagination(page));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/allUltimate")
+    public ResponseEntity<?> getAllCocktailsWithPageAndSize(Integer page, Integer size) {
+        try {
+            return ResponseEntity.ok(cocktailDataService.findAllWithPageAndSize(page, size));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<?> addNewCocktail(@RequestBody CocktailDto cocktail) {

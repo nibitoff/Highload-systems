@@ -1,6 +1,7 @@
 package com.alsab.boozycalc.service.data;
 
 import com.alsab.boozycalc.dto.CocktailDto;
+import com.alsab.boozycalc.dto.IngredientDto;
 import com.alsab.boozycalc.dto.ProductDto;
 import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.exception.ItemNotFoundByNameException;
@@ -8,6 +9,8 @@ import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.mapper.ProductMapper;
 import com.alsab.boozycalc.repository.ProductRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,5 +67,10 @@ public class ProductDataService {
         }
 
         return productMapper.productToDto(productRepo.save(productMapper.dtoToProduct(dto)));
+    }
+
+    public Iterable<ProductDto> findAllWithPagination(Integer page){
+        Pageable pageable = PageRequest.of(page, 50);
+        return productRepo.findAllWithPagination(pageable).stream().map(productMapper::productToDto).toList();
     }
 }

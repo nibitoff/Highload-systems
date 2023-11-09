@@ -18,7 +18,7 @@ public class ProductController {
     private final ProductService productService;
     private final ProductDataService productDataService;
 
-    @GetMapping("/all")
+    @GetMapping("/allInOne")
     public ResponseEntity<?> getProducts() {
         try {
             return ResponseEntity.ok(productDataService.findAll());
@@ -26,6 +26,16 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e);
         }
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+        try {
+            return ResponseEntity.ok(productDataService.findAllWithPagination(page));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteProductById(@RequestParam Long id) {

@@ -15,10 +15,19 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final RecipeDataService recipeDataService;
 
-    @GetMapping("/all")
+    @GetMapping("/allInOne")
     public ResponseEntity<?> getAllRecipes() {
         try {
             return ResponseEntity.ok(recipeDataService.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+        try {
+            return ResponseEntity.ok(recipeDataService.findAllWithPagination(page));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }

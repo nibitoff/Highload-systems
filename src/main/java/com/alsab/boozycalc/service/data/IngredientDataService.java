@@ -10,6 +10,8 @@ import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.mapper.IngredientMapper;
 import com.alsab.boozycalc.repository.IngredientRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -78,5 +80,10 @@ public class IngredientDataService {
     public void deleteById(Long id) {
         if (!ingredientRepo.existsById(id)) throw new ItemNotFoundException(IngredientDto.class, id);
         ingredientRepo.deleteById(id);
+    }
+
+    public Iterable<IngredientDto> findAllWithPagination(Integer page){
+        Pageable pageable = PageRequest.of(page, 50);
+        return ingredientRepo.findAllWithPagination(pageable).stream().map(mapper::ingredientToDto).toList();
     }
 }

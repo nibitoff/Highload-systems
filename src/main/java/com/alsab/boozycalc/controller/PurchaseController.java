@@ -16,10 +16,19 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
     private final PurchaseDataService purchaseDataService;
 
-    @GetMapping("/all")
+    @GetMapping("/allInOne")
     public ResponseEntity<?> getAllPurchases() {
         try {
             return ResponseEntity.ok(purchaseDataService.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+        try {
+            return ResponseEntity.ok(purchaseDataService.findAllWithPagination(page));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }

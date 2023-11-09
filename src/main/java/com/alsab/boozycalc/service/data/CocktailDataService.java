@@ -1,14 +1,19 @@
 package com.alsab.boozycalc.service.data;
 
 import com.alsab.boozycalc.dto.CocktailDto;
+import com.alsab.boozycalc.entity.CocktailEntity;
 import com.alsab.boozycalc.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.exception.ItemNotFoundByNameException;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.mapper.CocktailMapper;
 import com.alsab.boozycalc.repository.CocktailRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -78,5 +83,15 @@ public class CocktailDataService {
     public void deleteById(Long id) {
         if (!repo.existsById(id)) throw new ItemNotFoundException(CocktailDto.class, id);
         repo.deleteById(id);
+    }
+
+    public Iterable<CocktailDto> findAllWithPagination(Integer page){
+        Pageable pageable = PageRequest.of(page, 50);
+        return repo.findAllWithPagination(pageable).stream().map(mapper::cocktailToDto).toList();
+    }
+
+    public Iterable<CocktailDto> findAllWithPageAndSize(Integer page, Integer size){
+        Pageable pageable = PageRequest.of(page, size);
+        return repo.findAllWithPagination(pageable).stream().map(mapper::cocktailToDto).toList();
     }
 }

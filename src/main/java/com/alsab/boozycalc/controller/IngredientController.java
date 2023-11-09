@@ -18,10 +18,19 @@ public class IngredientController {
     private final IngredientDataService ingredientDataService;
     private final ModelMapper modelMapper;
 
-    @GetMapping("/all")
+    @GetMapping("/allInOne")
     public ResponseEntity<?> getAllIngredients() {
         try {
             return ResponseEntity.ok(ingredientDataService.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+        try {
+            return ResponseEntity.ok(ingredientDataService.findAllWithPagination(page));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
