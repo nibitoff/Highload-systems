@@ -3,7 +3,7 @@ package com.alsab.boozycalc.service;
 import com.alsab.boozycalc.dto.UserDto;
 import com.alsab.boozycalc.entity.RoleEnum;
 import com.alsab.boozycalc.exception.UsernameIsAlreadyTakenException;
-import com.alsab.boozycalc.security.jwt.JwtUtils;
+import com.alsab.boozycalc.security.jwt.JwtUtilsService;
 import com.alsab.boozycalc.security.payload.AuthenticationRequest;
 import com.alsab.boozycalc.security.payload.AuthenticationResponse;
 import com.alsab.boozycalc.security.payload.RegisterRequest;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final UserDataService userDataService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtils jwtUtils;
+    private final JwtUtilsService jwtUtils;
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request){
