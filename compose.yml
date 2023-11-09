@@ -1,12 +1,56 @@
 services:
-  db:
+#  test_containers_db:
+#    env_file:
+#      - .env
+#    image: 'postgres:13.3'
+#    container_name: test_container_db
+#    environment:
+#      POSTGRES_USER: ${DOCKER_POSTGRES_USER}
+#      POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASSWORD}
+#      POSTGRES_DB: "boozyCalcTest"
+#    ports:
+#      - 5432:5432
+
+  app:
     env_file:
       - .env
-    image: 'postgres:13.3'
-    container_name: db
+    container_name: boozy_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      prod_db:
+        condition: service_healthy
+    image: booze:latest
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
+      - SPRING_PROFILES_ACTIVE=prod
+
+  prod_db:
+    image: postgres:latest
+    hostname: postgres
     environment:
       POSTGRES_USER: ${DOCKER_POSTGRES_USER}
       POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASSWORD}
-      POSTGRES_DB: "boozyCalcTest"
+      POSTGRES_DB: ${DOCKER_POSTGRES_DB}
+      PGUSER: ${DOCKER_POSTGRES_USER}
+      PGPASSWORD: ${DOCKER_POSTGRES_PASSWORD}
+      PGDATABASE: ${DOCKER_POSTGRES_DB}
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${DOCKER_POSTGRES_USER} -d ${DOCKER_POSTGRES_DB}'" ]
+      interval: 3s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  db-data:
