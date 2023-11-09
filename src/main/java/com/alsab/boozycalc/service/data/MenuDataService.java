@@ -1,9 +1,7 @@
 package com.alsab.boozycalc.service.data;
 
 import com.alsab.boozycalc.dto.MenuDto;
-import com.alsab.boozycalc.dto.OrderDto;
 import com.alsab.boozycalc.entity.MenuEntity;
-import com.alsab.boozycalc.exception.ItemNotFoundException;
 import com.alsab.boozycalc.mapper.MenuMapper;
 import com.alsab.boozycalc.repository.MenuRepo;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +39,7 @@ public class MenuDataService {
         return menuRepo.findAllByCocktail(id).stream().map(mapper::menuToDto).toList();
     }
 
-    public List<MenuDto> findByParty(Long id){
+    public List<MenuDto> findAllByParty(Long id){
         return menuRepo.findAllByParty(id).stream().map(mapper::menuToDto).toList();
     }
 }

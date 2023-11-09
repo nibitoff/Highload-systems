@@ -29,7 +29,7 @@ public class PartyController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity deleteById(@RequestParam Long id) {
+    public ResponseEntity<?> deleteById(@RequestParam Long id) {
         try {
             partyDataService.deleteById(id);
             return ResponseEntity.ok(id);
@@ -39,7 +39,7 @@ public class PartyController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addParty(@RequestBody PartyDto party) {
+    public ResponseEntity<?> addParty(@RequestBody PartyDto party) {
         try {
             partyService.add(party);
             return ResponseEntity.ok("party successfully added");
@@ -49,12 +49,34 @@ public class PartyController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity editParty(@RequestBody PartyDto party) {
+    public ResponseEntity<?> editParty(@RequestBody PartyDto party) {
         try {
             partyService.edit(party);
             return ResponseEntity.ok("party successfully added");
         } catch (ItemNotFoundException e) {
             return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/menu")
+    public ResponseEntity<?> getPartyMenu(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(partyService.getPartyMenu(id));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/purchases")
+    public ResponseEntity<?> getPartyPurchases(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(partyService.getPartyPurchases(id));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
         }
     }
 }
