@@ -14,8 +14,6 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
-    private String name;
     @Column(name = "price")
     private float price;
     @ManyToOne

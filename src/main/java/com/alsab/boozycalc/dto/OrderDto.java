@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderDto {
     private Long id;
-    private String name;
     private float price;
     private PartyDto party;
     private UserDto person;

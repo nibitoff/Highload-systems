@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: order-entry-name-1
+      author: danandla
+      changes:
+        - addColumn:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: order_entry
+            columns:
+            - column:
+                name: name
+                type: varchar(50)
+        - dropColumn:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: orders
+            columnName: name

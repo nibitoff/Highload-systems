@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class OrderEntryDto {
     private OrderDto order;
     private CocktailDto cocktail;
+    private String name;
     private int quantity;
     private float priceForOne;
 }

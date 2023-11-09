@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 public class OrderEntryEntity {
     @EmbeddedId
     private OrderEntryId id;
+    @Column(name = "name")
+    private String name;
     @Column(name = "quantity")
     private int quantity;
     @Column(name = "price_for_one")
