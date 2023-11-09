@@ -47,4 +47,16 @@ public class OrderEntryDataService {
                 entryRepo.findByOrder(id).orElseThrow(() -> new ItemNotFoundException(OrderEntryDto.class, id))
         );
     }
+
+    public OrderEntryDto findById(OrderEntryDto dto){
+        OrderEntryEntity entity = mapper.dtoToOrderEntry(dto);
+        return mapper.orderEntryToDto(
+                entryRepo.findById(entity.getId()).orElseThrow(() -> new ItemNotFoundException(OrderEntryDto.class, dto.getCocktail().getId()))
+        );
+    }
+
+    public Boolean existsById(OrderEntryDto dto){
+        OrderEntryEntity entity = mapper.dtoToOrderEntry(dto);
+        return entryRepo.existsById(entity.getId());
+    }
 }

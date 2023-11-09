@@ -1,14 +1,12 @@
 package com.alsab.boozycalc.controller;
 
 import com.alsab.boozycalc.dto.PartyDto;
-import com.alsab.boozycalc.dto.ProductDto;
 import com.alsab.boozycalc.exception.ItemNotFoundException;
+import com.alsab.boozycalc.exception.NoCocktailInMenuException;
+import com.alsab.boozycalc.exception.NoIngredientsForCocktailException;
 import com.alsab.boozycalc.service.PartyService;
-import com.alsab.boozycalc.service.ProductService;
 import com.alsab.boozycalc.service.data.PartyDataService;
-import com.alsab.boozycalc.service.data.ProductDataService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +72,24 @@ public class PartyController {
         try {
             return ResponseEntity.ok(partyService.getPartyPurchases(id));
         } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createOrder(
+            @RequestParam Long partyId,
+            @RequestParam Long userId,
+            @RequestParam Long cocktailId) {
+        try {
+            return ResponseEntity.ok(partyService.createOrder(partyId, userId, cocktailId));
+        } catch (ItemNotFoundException  e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (NoCocktailInMenuException  e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (NoIngredientsForCocktailException e) {
             return ResponseEntity.badRequest().body(e.getDescription());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
