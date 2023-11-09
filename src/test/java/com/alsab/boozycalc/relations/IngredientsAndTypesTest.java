@@ -4,7 +4,6 @@ import com.alsab.boozycalc.MockMvcTestContainersTest;
 import com.alsab.boozycalc.entity.IngredientTypeEntity;
 import com.alsab.boozycalc.repository.IngredientTypeRepo;
 import jakarta.persistence.EntityManagerFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

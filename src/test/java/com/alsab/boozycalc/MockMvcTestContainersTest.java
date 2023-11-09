@@ -1,12 +1,10 @@
 package com.alsab.boozycalc;
 
-import com.alsab.boozycalc.repository.IngredientRepo;
-import com.alsab.boozycalc.repository.IngredientTypeRepo;
-import com.alsab.boozycalc.repository.ProductRepo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import jakarta.servlet.ServletContext;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
@@ -54,6 +52,7 @@ public abstract class MockMvcTestContainersTest implements Extension {
         assertNotNull(webApplicationContext.getBean("cocktailController"));
     }
 
+    @Transactional
     @AfterEach
     public void truncateEverything() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();

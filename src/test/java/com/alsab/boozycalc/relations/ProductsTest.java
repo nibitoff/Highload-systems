@@ -55,6 +55,6 @@ public class ProductsTest extends MockMvcTestContainersTest {
                 """;
 
         super.getMockMvc().perform(post("/api/v1/products/add").contentType(MediaType.APPLICATION_JSON).content(body)).andDo(System.out::println).andExpect(status().isOk());
-        super.getMockMvc().perform(get("/api/v1/products/all")).andDo(System.out::println).andExpect(status().isOk());
+        super.getMockMvc().perform(get("/api/v1/products/allInOne")).andDo(System.out::println).andExpect(status().isOk());
     }
 }
