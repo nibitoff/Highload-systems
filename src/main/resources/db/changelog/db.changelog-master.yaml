@@ -48,3 +48,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/0.0.9/changelog-order-price-0.0.9.yaml
+
+  - include:
+      file: db/changelog/0.0.10/changelog-order-entry-price-0.0.10.yaml

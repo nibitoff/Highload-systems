@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: order-entry-price-float-1
+      author: danandla
+      changes:
+        - addColumn:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: order_entry
+            columns:
+            - column:
+                name: price_for_one
+                type: float(50)

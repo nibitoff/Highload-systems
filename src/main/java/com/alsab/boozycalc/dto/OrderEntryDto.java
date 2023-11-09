@@ -11,4 +11,5 @@ public class OrderEntryDto {
     private OrderDto order;
     private CocktailDto cocktail;
     private int quantity;
+    private float priceForOne;
 }
