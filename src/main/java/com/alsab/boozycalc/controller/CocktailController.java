@@ -18,10 +18,19 @@ public class CocktailController {
     private final CocktailDataService cocktailDataService;
     private final ModelMapper modelMapper;
 
-    @GetMapping("/all")
+    @GetMapping("/allInOne")
     public ResponseEntity<?> getAllCocktails() {
         try {
             return ResponseEntity.ok(cocktailDataService.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+        try {
+            return ResponseEntity.ok(cocktailDataService.findAllWithPagination(page));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
