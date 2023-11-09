@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 public class OrderDto {
     private Long id;
     private String name;
-    private Long price;
+    private float price;
     private PartyEntity party_id;
     private UserEntity person_id;
-
 }

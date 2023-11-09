@@ -45,3 +45,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/0.0.8/changelog-steps-0.0.8.yaml
+
+  - include:
+      file: db/changelog/0.0.9/changelog-order-price-0.0.9.yaml
