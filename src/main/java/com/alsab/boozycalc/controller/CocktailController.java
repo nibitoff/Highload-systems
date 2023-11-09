@@ -36,6 +36,16 @@ public class CocktailController {
         }
     }
 
+    @GetMapping("/allUltimate")
+    public ResponseEntity<?> getAllCocktailsWithPageAndSize(Integer page, Integer size) {
+        try {
+            return ResponseEntity.ok(cocktailDataService.findAllWithPageAndSize(page, size));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+
     @PostMapping("/add")
     public ResponseEntity<?> addNewCocktail(@RequestBody CocktailDto cocktail) {
         try {

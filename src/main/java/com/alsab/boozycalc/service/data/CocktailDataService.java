@@ -89,4 +89,9 @@ public class CocktailDataService {
         Pageable pageable = PageRequest.of(page, 50);
         return repo.findAllWithPagination(pageable).stream().map(mapper::cocktailToDto).toList();
     }
+
+    public Iterable<CocktailDto> findAllWithPageAndSize(Integer page, Integer size){
+        Pageable pageable = PageRequest.of(page, size);
+        return repo.findAllWithPagination(pageable).stream().map(mapper::cocktailToDto).toList();
+    }
 }
