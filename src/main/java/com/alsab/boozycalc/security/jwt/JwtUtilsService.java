@@ -10,15 +10,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 
-@Component
+@Service
 @RequiredArgsConstructor
-public class JwtUtils {
-    private static final Logger logger = LogManager.getLogger(JwtUtils.class);
+public class JwtUtilsService {
+    private static final Logger logger = LogManager.getLogger(JwtUtilsService.class);
 
     @Value("${jwt.secret}")
     private String jwtSecret;
