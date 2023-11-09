@@ -1,10 +1,13 @@
 package com.alsab.boozycalc.service.data;
 
+import com.alsab.boozycalc.dto.IngredientDto;
 import com.alsab.boozycalc.dto.RecipeDto;
 import com.alsab.boozycalc.entity.RecipeEntity;
 import com.alsab.boozycalc.mapper.RecipeMapper;
 import com.alsab.boozycalc.repository.RecipeRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,5 +43,10 @@ public class RecipeDataService {
 
     public List<RecipeDto> findAll() {
         return recipeRepo.findAll().stream().map(recipeMapper::recipeToDto).toList();
+    }
+
+    public Iterable<RecipeDto> findAllWithPagination(Integer page){
+        Pageable pageable = PageRequest.of(page, 50);
+        return recipeRepo.findAllWithPagination(pageable).stream().map(recipeMapper::recipeToDto).toList();
     }
 }
