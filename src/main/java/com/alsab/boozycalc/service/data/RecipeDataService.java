@@ -41,4 +41,9 @@ public class RecipeDataService {
     public List<RecipeDto> findAll() {
         return recipeRepo.findAll().stream().map(recipeMapper::recipeToDto).toList();
     }
+
+
+    public List<RecipeDto> findAllByCocktail(Long id) {
+        return recipeRepo.findAllByCocktail(id).stream().map(recipeMapper::recipeToDto).toList();
+    }
 }
