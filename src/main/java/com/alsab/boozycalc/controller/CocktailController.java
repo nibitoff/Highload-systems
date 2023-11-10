@@ -45,7 +45,7 @@ public class CocktailController {
     }
 
     @GetMapping("/allUltimate")
-    public ResponseEntity<?> getAllCocktailsWithPageAndSize(Integer page, Integer size) {
+    public ResponseEntity<?> getAllCocktailsWithPageAndSize(@RequestParam Integer page, @RequestParam Integer size) {
         try {
             return ResponseEntity.ok(cocktailDataService.findAllWithPageAndSize(page, size));
         } catch (Exception e) {
