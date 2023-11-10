@@ -50,6 +50,11 @@ public abstract class MockMvcTestContainersTest implements Extension {
         assertNotNull(servletContext);
         assertTrue(servletContext instanceof MockServletContext);
         assertNotNull(webApplicationContext.getBean("cocktailController"));
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        final Query query = entityManager
+                .createNativeQuery("SELECT version();");
+        System.out.println( "Postgres version: " + query.getSingleResult());
     }
 
     @Transactional
