@@ -1,16 +1,4 @@
 services:
-#  test_containers_db:
-#    env_file:
-#      - .env
-#    image: 'postgres:13.3'
-#    container_name: test_container_db
-#    environment:
-#      POSTGRES_USER: ${DOCKER_POSTGRES_USER}
-#      POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASSWORD}
-#      POSTGRES_DB: "boozyCalcTest"
-#    ports:
-#      - 5432:5432
-
   app:
     env_file:
       - .env
@@ -37,9 +25,6 @@ services:
       POSTGRES_USER: ${DOCKER_POSTGRES_USER}
       POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASSWORD}
       POSTGRES_DB: ${DOCKER_POSTGRES_DB}
-      PGUSER: ${DOCKER_POSTGRES_USER}
-      PGPASSWORD: ${DOCKER_POSTGRES_PASSWORD}
-      PGDATABASE: ${DOCKER_POSTGRES_DB}
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ../2. Init Database:/docker-entrypoint-initdb.d
