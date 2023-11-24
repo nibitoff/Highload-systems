@@ -7,16 +7,8 @@ import com.alsab.boozycalc.service.CocktailService;
 import com.alsab.boozycalc.service.data.CocktailDataService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.Errors;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/cocktails")
@@ -24,7 +16,6 @@ import java.util.Map;
 public class CocktailController {
     private final CocktailService cocktailService;
     private final CocktailDataService cocktailDataService;
-    private final ModelMapper modelMapper;
 
     @GetMapping("/allInOne")
     public ResponseEntity<?> getAllCocktails() {

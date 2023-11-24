@@ -7,7 +7,6 @@ import com.alsab.boozycalc.service.IngredientService;
 import com.alsab.boozycalc.service.data.IngredientDataService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class IngredientController {
     private final IngredientService ingredientService;
     private final IngredientDataService ingredientDataService;
-    private final ModelMapper modelMapper;
 
     @GetMapping("/allInOne")
     public ResponseEntity<?> getAllIngredients() {
