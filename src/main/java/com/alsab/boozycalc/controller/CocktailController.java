@@ -27,7 +27,7 @@ public class CocktailController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCocktailsWithPagination(Integer page) {
+    public ResponseEntity<?> getAllCocktailsWithPagination(@RequestParam Integer page) {
         try {
             return ResponseEntity.ok(cocktailDataService.findAllWithPagination(page));
         } catch (Exception e) {
