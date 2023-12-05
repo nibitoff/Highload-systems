@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -408,5 +409,149 @@ public class OrderCreationTest extends MockMvcTestContainersTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Cocktail with id " + screwId + " is not in menu of party with id " + party.getId()));
         // ---------------------- ------- ----------------------
+    }
+
+    @Test
+    public void CocktailsCrud() throws Exception {
+        createBase();
+        createBasePurchases();
+
+        String body = """
+                {
+                    "name": "strange cocktail",
+                    "description": "",
+                    "recipe": "",
+                    "type": {
+                        "id": 1
+                    }
+                }
+                """;
+
+        String url1 = "/api/v1/cocktails/add";
+        // ---------------------- REQUEST ----------------------
+        super.getMockMvc()
+                .perform(post(url1).contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+        // ---------------------- ------- ----------------------
+
+        body = """
+                {
+                    "id": 4,
+                    "name": "strange cocktail",
+                    "description": "",
+                    "recipe": "",
+                    "type": {
+                        "id": 1
+                    }
+                }
+                """;
+        url1 = "/api/v1/cocktails/edit";
+        // ---------------------- REQUEST ----------------------
+        super.getMockMvc()
+                .perform(post(url1).contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+        // ---------------------- ------- ----------------------
+
+        url1 = "/api/v1/cocktails/delete?id=4";
+        // ---------------------- REQUEST ----------------------
+        super.getMockMvc().perform(delete(url1).contentType(MediaType.APPLICATION_JSON).content("")).andDo(System.out::println).andExpect(status().isOk());
+        // ---------------------- ------- ----------------------
+    }
+
+    @Test
+    public void PartiesCrud() throws Exception {
+        createBase();
+        createBasePurchases();
+
+        String body = """
+                {
+                    "name": "repka",
+                    "timestamp": "2023-2-2 10:00:00",
+                    "description": "",
+                    "location": ""
+                }
+                """;
+
+        String url1 = "/api/v1/parties/add";
+        // ---------------------- REQUEST ----------------------
+        super.getMockMvc()
+                .perform(post(url1).contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
+        // ---------------------- ------- ----------------------
+
+//        body = """
+//                {
+//                    "id": 1,
+//                    "name": "repka",
+//                    "timestamp": "2023-2-2 10:00:00",
+//                    "description": "",
+//                    "location": ""
+//                }
+//                """;
+//        url1 = "/api/v1/parties/edit";
+//        // ---------------------- REQUEST ----------------------
+//        super.getMockMvc()
+//                .perform(post(url1).contentType(MediaType.APPLICATION_JSON).content(body))
+//                .andExpect(status().isBadRequest());
+//        // ---------------------- ------- ----------------------
+
+//        url1 = "/api/v1/parties/delete?id=1";
+//        // ---------------------- REQUEST ----------------------
+//        super.getMockMvc().perform(delete(url1).contentType(MediaType.APPLICATION_JSON).content(""))
+//                .andDo(r -> System.out.println(r.getResponse().getContentAsString())).andExpect(status().isOk());
+//        // ---------------------- ------- ----------------------
+    }
+
+    @Test
+    public void ProductsCrud() throws Exception {
+        createBase();
+        createBasePurchases();
+
+        String body = """
+                {
+                    "name": "Evervess Ginger ale",
+                    "ingredient": {
+                        "id": 6,
+                        "type": {
+                            "id": 5
+                        }
+                    },
+                    "price": 11.0
+                }
+         """;
+
+
+        String url1 = "/api/v1/products/add";
+        // ---------------------- REQUEST ----------------------
+        super.getMockMvc()
+                .perform(post(url1).contentType(MediaType.APPLICATION_JSON).content(body))
+                .andDo(r -> System.out.println(r.getResponse().getContentAsString()))
+                .andExpect(status().isOk());
+        // ---------------------- ------- ----------------------
+
+//        body = """
+//                {
+//                    "id": 7,
+//                    "name": "Evervess Ginger ale",
+//                    "ingredient": {
+//                        "id": 23,
+//                        "type": {
+//                            "id": 8
+//                        }
+//                    },
+//                    "price": 11.0
+//                }
+//                """;
+//        url1 = "/api/v1/products/edit";
+//        // ---------------------- REQUEST ----------------------
+//        super.getMockMvc()
+//                .perform(post(url1).contentType(MediaType.APPLICATION_JSON).content(body))
+//                .andExpect(status().isOk());
+//        // ---------------------- ------- ----------------------
+//
+//        url1 = "/api/v1/products/delete?id=1";
+//        // ---------------------- REQUEST ----------------------
+//        super.getMockMvc().perform(delete(url1).contentType(MediaType.APPLICATION_JSON).content("")).andDo(System.out::println).andExpect(status().isOk());
+//        // ---------------------- ------- ----------------------
     }
 }

@@ -69,7 +69,7 @@ public class CocktailController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCocktail(Long id) {
+    public ResponseEntity<?> deleteCocktail(@RequestParam Long id) {
         try {
             cocktailDataService.deleteById(id);
             return ResponseEntity.ok(id);

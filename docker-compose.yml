@@ -1,17 +1,20 @@
 services:
   app:
-    env_file:
-      - .env
-    container_name: boozy_app
-    build:
-      context: .
-      dockerfile: Dockerfile
     depends_on:
       prod_db:
         condition: service_healthy
+#    container_name: boozy_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
     image: booze:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8080:8080
+    env_file:
+      - .env
     environment:
       - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
