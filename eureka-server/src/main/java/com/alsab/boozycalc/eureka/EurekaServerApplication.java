@@ -1,4 +1,4 @@
-package ru.itmo.highendsystem.eureka;
+package com.alsab.boozycalc.eureka;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

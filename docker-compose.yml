@@ -18,6 +18,7 @@ services:
       timeout: 3s
       retries: 3
 
+
   cocktails_app:
     depends_on:
       cocktails_db:
@@ -35,5 +36,50 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
       - SPRING_PROFILES_ACTIVE=prod
 
+  config:
+    image: config:latest
+    container_name: config
+    environment:
+      - 'PAGINATION_MAX_SIZE=50'
+      - 'JWT_SECRET=itmo'
+      - 'JWT_EXPIRED=15'
+    build:
+      context: ./config
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    depends_on:
+      - postgres
+
+  eureka:
+    image: eureka:latest
+    container_name: eureka
+    environment:
+      - 'PAGINATION_MAX_SIZE=50'
+      - 'JWT_SECRET=itmo'
+      - 'JWT_EXPIRED=15'
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config
+
+#  gateway:
+#    image: gateway:latest
+#    container_name: gateway
+#    environment:
+#      - 'PAGINATION_MAX_SIZE=50'
+#      - 'JWT_SECRET=itmo'
+#      - 'JWT_EXPIRED=15'
+#    build:
+#      context: ./gateway
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - eureka
+#
 volumes:
   db-data:

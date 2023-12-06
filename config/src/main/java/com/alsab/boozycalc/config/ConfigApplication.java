@@ -1,4 +1,4 @@
-package ru.itmo.highendsystem.config;
+package com.alsab.boozycalc.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
