@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@DirtiesContext
 public class ProductsTest extends MockMvcTestContainersTest {
     private final IngredientTypeRepo ingredientTypeRepo;
     private final IngredientRepo ingredientRepo;
@@ -54,7 +56,9 @@ public class ProductsTest extends MockMvcTestContainersTest {
                 }
                 """;
 
-        super.getMockMvc().perform(post("/api/v1/products/add").contentType(MediaType.APPLICATION_JSON).content(body)).andDo(System.out::println).andExpect(status().isOk());
-        super.getMockMvc().perform(get("/api/v1/products/allInOne")).andDo(System.out::println).andExpect(status().isOk());
+        super.getMockMvc().perform(post("/api/v1/products/add").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andDo(r -> System.out.println(r.getResponse().getContentAsString())).andExpect(status().isOk());
+        super.getMockMvc().perform(get("/api/v1/products/allInOne"))
+                .andDo(r -> System.out.println(r.getResponse().getContentAsString())).andExpect(status().isOk());
     }
 }

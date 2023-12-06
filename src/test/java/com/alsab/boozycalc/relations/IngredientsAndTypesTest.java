@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@DirtiesContext
 public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
     private final IngredientTypeRepo ingredientTypeRepo;
 
@@ -24,6 +26,7 @@ public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
     }
     @Test
     public void ingredientOfExistentTypeTest() throws Exception {
+
         IngredientTypeEntity type1 = new IngredientTypeEntity();
         type1.setName("tiki");
         type1.setId(ingredientTypeRepo.save(type1).getId());
@@ -67,4 +70,5 @@ public class IngredientsAndTypesTest extends MockMvcTestContainersTest {
                 .perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isBadRequest());
     }
+
 }

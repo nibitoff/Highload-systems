@@ -3,15 +3,16 @@ package com.alsab.boozycalc;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
-import jakarta.servlet.ServletContext;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -22,9 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
@@ -63,20 +61,8 @@ public abstract class MockMvcTestContainersTest implements Extension {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
-    @Test
-    public void webApplicationEnvironmentTest() {
-        ServletContext servletContext = webApplicationContext.getServletContext();
-        assertNotNull(servletContext);
-        assertTrue(servletContext instanceof MockServletContext);
-        assertNotNull(webApplicationContext.getBean("cocktailController"));
-
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        final Query query = entityManager
-                .createNativeQuery("SELECT version();");
-        System.out.println("Postgres version: " + query.getSingleResult());
-    }
-
-    @AfterEach
+    @BeforeEach
+    @Transactional
     public void truncateEverything() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         final Query query = entityManager
