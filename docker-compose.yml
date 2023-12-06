@@ -3,11 +3,6 @@ services:
     depends_on:
       prod_db:
         condition: service_healthy
-#    container_name: boozy_app
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: development
     image: booze:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
