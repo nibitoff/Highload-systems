@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: constraints-1
+      author: danandla
+      changes:
+      - addUniqueConstraint:
+          catalogName: boozyCalcCocktails
+          schemaName: public
+          tableName: cocktails
+          columnNames: name
+          constraintName: unique_cocktail_name
+      - addUniqueConstraint:
+          catalogName: boozyCalcCocktails
+          schemaName: public
+          tableName: ingredients
+          columnNames: name
+          constraintName: unique_ingredient_name
