@@ -1,5 +1,5 @@
 services:
-  cocktails_db:
+  prod_db:
     image: postgres:latest
     hostname: postgres
     environment:
@@ -18,16 +18,29 @@ services:
       timeout: 3s
       retries: 3
 
+  liquibase:
+    depends_on:
+      prod_db:
+        condition: service_healthy
+    image: liquibase/liquibase:latest
+    container_name: liquibase_container
+    volumes:
+      - ./src/main/resources/db/changelog:/liquibase/changelog/
+    network_mode: host
+    command:
+      update --changelog-file=db.changelog-master.yaml --url=jdbc:postgresql://localhost:5432/${DOCKER_POSTGRES_DB} --username=${DOCKER_POSTGRES_USER} --password=${DOCKER_POSTGRES_PASSWORD}
+
 
   cocktails_app:
     depends_on:
-      cocktails_db:
+      prod_db:
         condition: service_healthy
     image: booze-cocktail:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.m2:/root/.m2
     ports:
-      - 8080:8080
+      - 8181:8181
     env_file:
       - .env
     environment:
@@ -49,7 +62,8 @@ services:
     ports:
       - "8888:8888"
     depends_on:
-      - postgres
+      prod_db:
+        condition: service_healthy
 
   eureka:
     image: eureka:latest
