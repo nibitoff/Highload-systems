@@ -49,6 +49,24 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
       - SPRING_PROFILES_ACTIVE=prod
 
+  auth_app:
+    depends_on:
+      prod_db:
+        condition: service_healthy
+    image: booze-auth:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.m2:/root/.m2
+    ports:
+      - 8182:8182
+    env_file:
+      - .env
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
+      - SPRING_PROFILES_ACTIVE=prod
+
   config:
     image: config:latest
     container_name: config
