@@ -1,0 +1,42 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+#      routes:
+#        - id: login-service
+#          uri: lb://login-service
+#          predicates:
+#            - Path=/api/v1/airline/login, /api/v1/airline/validate, /api/v1/airline/get-login-from-token
+#            - Method=POST
+#        - id: flight-service
+#          uri: lb://flight-service
+#          predicates:
+#            - Path=/api/v1/airline/flights/**
+#            - Method=POST
+#        - id: recommendation-service
+#          uri: lb://recommendation-service
+#          predicates:
+#            - Path=/api/v1/airline/recommendation
+#            - Method=POST
+#        - id: admin-service
+#          uri: lb://admin-service
+#          predicates:
+#            - Path=/api/v1/airline/admin/**
+#            - Method=POST
+#        - id: user-service
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/api/v1/airline/user/**
+#            - Method=POST
+eureka:
+  client:
+    serviceUrl:
+      defaultZone:
+        #http://localhost:8761/eureka/
+        #"http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/"
+        http://eureka:8761/eureka/
