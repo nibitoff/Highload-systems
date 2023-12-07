@@ -23,7 +23,9 @@
 		<module>eureka-server</module>
 		<module>gateway</module>
         <module>cocktail-service</module>
-    </modules>
+        <module>party-service</module>
+		<module>auth-service</module>
+	</modules>
 
 	<packaging>pom</packaging>
 
