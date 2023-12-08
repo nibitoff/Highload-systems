@@ -23,7 +23,7 @@
 		<module>eureka-server</module>
 		<module>gateway</module>
         <module>cocktail-service</module>
-        <module>party-service</module>
+<!--        <module>party-service</module>-->
 		<module>auth-service</module>
 	</modules>
 

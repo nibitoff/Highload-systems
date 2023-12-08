@@ -7,9 +7,9 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-#      routes:
-#        - id: login-service
-#          uri: lb://login-service
+      routes:
+#        - id: auth-service
+#          uri: lb://auth-service
 #          predicates:
 #            - Path=/api/v1/airline/login, /api/v1/airline/validate, /api/v1/airline/get-login-from-token
 #            - Method=POST
