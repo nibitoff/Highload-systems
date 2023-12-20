@@ -37,3 +37,9 @@ services:
 
 volumes:
   db-data:
+
+# TODO
+#deprecated
+#from eclipse убрать
+#указать версию докеер компоуз
+#правильные rest урлы
