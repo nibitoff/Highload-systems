@@ -2,7 +2,7 @@ services:
   prod_db:
     image: postgres:latest
     hostname: postgres
-    command: postgres -c 'max_connections=50'
+    command: postgres -c 'max_connections=200'
     environment:
       POSTGRES_USER: ${DOCKER_POSTGRES_USER}
       POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASSWORD}
@@ -100,22 +100,19 @@ services:
     build:
       context: ./cocktail-service
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
-      - 'PAGINATION_MAX_SIZE=50'
-      - 'JWT_SECRET=itmo'
-      - 'JWT_EXPIRED=15'
+      - PAGINATION_MAX_SIZE=50
+      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
+      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
+      - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.m2:/root/.m2
     ports:
       - 8181:8181
-  #    env_file:
-  #      - .env
-  #    environment:
-  #      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
-  #      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
-  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
-  #      - SPRING_PROFILES_ACTIVE=prod
 
   auth_app:
     depends_on:
@@ -125,23 +122,21 @@ services:
     build:
       context: ./auth-service
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
-      - 'PAGINATION_MAX_SIZE=50'
-      - 'JWT_SECRET=itmo'
-      - 'JWT_EXPIRED=15'
+      - PAGINATION_MAX_SIZE=50
+      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
+      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRED=1800000
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.m2:/root/.m2
     ports:
       - 8182:8182
-    env_file:
-      - .env
-#    environment:
-#      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
-#      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
-#      - SPRING_PROFILES_ACTIVE=prod
 
 volumes:
   db-data:

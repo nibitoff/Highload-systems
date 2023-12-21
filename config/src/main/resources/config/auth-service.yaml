@@ -5,9 +5,9 @@ spring:
     hikari:
       maximum-pool-size: 50
       connection-timeout: 6000
-    url: jdbc:postgresql://postgres:5432/boozyCalc
-    username: docker_user
-    password: passphrase
+    url: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASS}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -18,8 +18,7 @@ eureka:
     serviceUrl:
       defaultZone: http://eureka:8761/eureka/
 jwt:
-  secret: bbce7e869ae83a92d6c4d2c95bda94fa84f916208d5bb0fde7ba5aa34a9b8e0e
-  expired: ${JWT_EXPIRED}
+  secret: ${JWT_SECRET}
   expiration: 1800000
 pagination:
   maxSize: ${PAGINATION_MAX_SIZE}
