@@ -8,31 +8,14 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-#        - id: auth-service
-#          uri: lb://auth-service
+        - id: auth-service
+          uri: lb://auth-service
 #          predicates:
-#            - Path=/api/v1/airline/login, /api/v1/airline/validate, /api/v1/airline/get-login-from-token
+#            - Path=/api/v1/auth/login, /api/v1/auth/validate, /api/v1/auth/
 #            - Method=POST
-#        - id: flight-service
-#          uri: lb://flight-service
-#          predicates:
-#            - Path=/api/v1/airline/flights/**
-#            - Method=POST
-#        - id: recommendation-service
-#          uri: lb://recommendation-service
-#          predicates:
-#            - Path=/api/v1/airline/recommendation
-#            - Method=POST
-#        - id: admin-service
-#          uri: lb://admin-service
-#          predicates:
-#            - Path=/api/v1/airline/admin/**
-#            - Method=POST
-#        - id: user-service
-#          uri: lb://user-service
-#          predicates:
-#            - Path=/api/v1/airline/user/**
-#            - Method=POST
+        - id: cocktail-service
+          uri: lb://cocktail-service
+
 eureka:
   client:
     serviceUrl:

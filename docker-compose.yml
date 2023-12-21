@@ -30,43 +30,6 @@ services:
     command:
       update --changelog-file=db.changelog-master.yaml --url=jdbc:postgresql://localhost:5432/${DOCKER_POSTGRES_DB} --username=${DOCKER_POSTGRES_USER} --password=${DOCKER_POSTGRES_PASSWORD}
 
-
-  cocktails_app:
-    depends_on:
-      prod_db:
-        condition: service_healthy
-    image: booze-cocktail:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.m2:/root/.m2
-    ports:
-      - 8181:8181
-#    env_file:
-#      - .env
-#    environment:
-#      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
-#      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
-#      - SPRING_PROFILES_ACTIVE=prod
-
-  auth_app:
-    depends_on:
-      prod_db:
-        condition: service_healthy
-    image: booze-auth:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.m2:/root/.m2
-    ports:
-      - 8182:8182
-#    env_file:
-#      - .env
-#    environment:
-#      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
-#      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
-#      - SPRING_PROFILES_ACTIVE=prod
-
   config:
     image: config:latest
     container_name: config
@@ -74,6 +37,7 @@ services:
       - 'PAGINATION_MAX_SIZE=50'
       - 'JWT_SECRET=itmo'
       - 'JWT_EXPIRED=15'
+      - 'JWT_EXPIRATION=1800000'
     build:
       context: ./config
       dockerfile: Dockerfile
@@ -125,6 +89,58 @@ services:
     depends_on:
       eureka:
         condition: service_healthy
+
+
+#  cocktails_app:
+#    depends_on:
+#      - gateway
+#    image: booze-cocktail:latest
+#    container_name: cocktail-service
+#    environment:
+#      - 'PAGINATION_MAX_SIZE=50'
+#      - 'JWT_SECRET=itmo'
+#      - 'JWT_EXPIRED=15'
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - ~/.m2:/root/.m2
+#    ports:
+#      - 8181:8181
+  #    env_file:
+  #      - .env
+  #    environment:
+  #      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
+  #      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
+  #      - SPRING_PROFILES_ACTIVE=prod
+
+  auth_app:
+    depends_on:
+      - gateway
+    image: booze-auth:latest
+    container_name: auth-service
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    environment:
+      - 'PAGINATION_MAX_SIZE=50'
+      - 'JWT_SECRET=itmo'
+      - 'JWT_EXPIRED=15'
+      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
+      - SPRING_PROFILES_ACTIVE=prod
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.m2:/root/.m2
+    ports:
+      - 8182:8182
+    env_file:
+      - .env
+#    environment:
+#      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
+#      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
+#      - SPRING_PROFILES_ACTIVE=prod
 
 volumes:
   db-data:
