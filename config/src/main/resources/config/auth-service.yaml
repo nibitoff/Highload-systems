@@ -18,7 +18,7 @@ eureka:
     serviceUrl:
       defaultZone: http://eureka:8761/eureka/
 jwt:
-  secret: 443A84AE9B67A6D87BCFCE64F69B2
+  secret: bbce7e869ae83a92d6c4d2c95bda94fa84f916208d5bb0fde7ba5aa34a9b8e0e
   expiration: 1800000
 pagination:
   maxSize: ${PAGINATION_MAX_SIZE}
