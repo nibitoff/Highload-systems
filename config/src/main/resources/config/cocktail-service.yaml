@@ -5,7 +5,6 @@ spring:
     hikari:
       maximum-pool-size: 50
       connection-timeout: 6000
-    #url: jdbc:postgresql://localhost:5432/boozyCalc
     url: jdbc:postgresql://postgres:5432/boozyCalc
     username: docker_user
     password: passphrase
@@ -18,10 +17,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://eureka:8761/eureka/
-      #defaultZone: http://localhost:8761/eureka/
 jwt:
-  secret: ${JWT_SECRET}
+  secret: bbce7e869ae83a92d6c4d2c95bda94fa84f916208d5bb0fde7ba5aa34a9b8e0e
   expired: ${JWT_EXPIRED}
+  expiration: 1800000
 pagination:
   maxSize: ${PAGINATION_MAX_SIZE}
 
