@@ -41,13 +41,13 @@ services:
       - ~/.m2:/root/.m2
     ports:
       - 8181:8181
-    env_file:
-      - .env
-    environment:
-      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
-      - SPRING_PROFILES_ACTIVE=prod
+#    env_file:
+#      - .env
+#    environment:
+#      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
+#      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
+#      - SPRING_PROFILES_ACTIVE=prod
 
   auth_app:
     depends_on:
@@ -59,13 +59,13 @@ services:
       - ~/.m2:/root/.m2
     ports:
       - 8182:8182
-    env_file:
-      - .env
-    environment:
-      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
-      - SPRING_PROFILES_ACTIVE=prod
+#    env_file:
+#      - .env
+#    environment:
+#      - SPRING_DATASOURCE_USERNAME=${DOCKER_POSTGRES_USER}
+#      - SPRING_DATASOURCE_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DOCKER_POSTGRES_DB}
+#      - SPRING_PROFILES_ACTIVE=prod
 
   config:
     image: config:latest
@@ -82,6 +82,11 @@ services:
     depends_on:
       prod_db:
         condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent config:8888/actuator/health | grep UP || exit 1"
+      interval: 15s
+      retries: 5
+      timeout: 10s
 
   eureka:
     image: eureka:latest
@@ -96,22 +101,30 @@ services:
     ports:
       - "8761:8761"
     depends_on:
-      - config
+      config:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent eureka:8761/actuator/health | grep UP || exit 1"
+      interval: 30s
+      retries: 5
+      timeout: 10s
 
-#  gateway:
-#    image: gateway:latest
-#    container_name: gateway
-#    environment:
-#      - 'PAGINATION_MAX_SIZE=50'
-#      - 'JWT_SECRET=itmo'
-#      - 'JWT_EXPIRED=15'
-#    build:
-#      context: ./gateway
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - eureka
-#
+
+  gateway:
+    image: gateway:latest
+    container_name: gateway
+    environment:
+      - 'PAGINATION_MAX_SIZE=50'
+      - 'JWT_SECRET=itmo'
+      - 'JWT_EXPIRED=15'
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      eureka:
+        condition: service_healthy
+
 volumes:
   db-data:
