@@ -1,8 +1,6 @@
-FROM maven:3.8.4-openjdk-17 as build
-COPY src src
-COPY pom.xml .
-RUN mvn clean package
-
-FROM openjdk:17
-COPY --from=build /target/gateway.jar /target/gateway.jar
-ENTRYPOINT ["java","-jar","/target/gateway.jar"]
+FROM gradle:8.5.0-jdk17
+WORKDIR /app
+COPY build.gradle settings.gradle ./
+COPY src ./src
+RUN gradle build
+CMD gradle bootRun
