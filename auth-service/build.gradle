@@ -18,7 +18,7 @@ dependencies {
     compileOnly libs.lombok
     annotationProcessor libs.lombok
     implementation libs.mapstruct
-    annotationProcessor libs.mapstruct
+    annotationProcessor libs.mapstruct.processor
 
     api libs.spring.boot.actuator
     api libs.spring.boot.validation
@@ -35,11 +35,13 @@ dependencies {
     api libs.jjwt.api
     api libs.jjwt.impl
     api libs.jjwt.jackson
+    api libs.gson
 
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
     testImplementation libs.spring.boot.test
     testImplementation libs.spring.security.test
+    testImplementation libs.json.path
     testImplementation libs.hamcrest
     testImplementation libs.testcontainers.jupiter
     testImplementation libs.testcontainers.postgresql

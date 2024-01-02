@@ -1,5 +1,6 @@
 services:
   prod_db:
+    network_mode: host
     image: postgres:latest
     hostname: postgres
     command: postgres -c 'max_connections=200'
@@ -32,7 +33,7 @@ services:
       update --changelog-file=db.changelog-master.yaml --url=jdbc:postgresql://localhost:5432/${DOCKER_POSTGRES_DB} --username=${DOCKER_POSTGRES_USER} --password=${DOCKER_POSTGRES_PASSWORD}
 
   config:
-    image: config:latest
+    image: booze-config:latest
     container_name: config
     environment:
       - 'PAGINATION_MAX_SIZE=50'
@@ -54,7 +55,8 @@ services:
       timeout: 10s
 
   eureka:
-    image: eureka:latest
+    image: booze-eureka:latest
+    network_mode: host
     container_name: eureka
     environment:
       - 'PAGINATION_MAX_SIZE=50'
@@ -69,14 +71,15 @@ services:
       config:
         condition: service_healthy
     healthcheck:
-      test: "curl --fail --silent eureka:8761/actuator/health | grep UP || exit 1"
+      test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
       interval: 30s
       retries: 5
       timeout: 10s
 
 
   gateway:
-    image: gateway:latest
+    image: booze-gateway:latest
+    network_mode: host
     container_name: gateway
     environment:
       - 'PAGINATION_MAX_SIZE=50'
@@ -93,6 +96,7 @@ services:
 
 
   cocktails_app:
+    network_mode: host
     depends_on:
       - gateway
     image: booze-cocktail:latest
@@ -110,11 +114,11 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.m2:/root/.m2
     ports:
       - 8181:8181
 
   auth_app:
+    network_mode: host
     depends_on:
       - gateway
     image: booze-auth:latest
@@ -134,7 +138,6 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.m2:/root/.m2
     ports:
       - 8182:8182
 
