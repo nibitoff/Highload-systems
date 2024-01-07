@@ -28,7 +28,7 @@ services:
     volumes:
       - ./src/main/resources/db/changelog:/liquibase/changelog/
     command:
-      update --changelog-file=db.changelog-master.yaml --url=jdbc:postgresql://localhost:5432/${DOCKER_POSTGRES_DB} --username=${DOCKER_POSTGRES_USER} --password=${DOCKER_POSTGRES_PASSWORD}
+      update --changelog-file=db.changelog-master.yaml --url=jdbc:postgresql://prod_db:5432/${DOCKER_POSTGRES_DB} --username=${DOCKER_POSTGRES_USER} --password=${DOCKER_POSTGRES_PASSWORD}
 
   config:
     image: booze-config:latest
