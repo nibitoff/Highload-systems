@@ -5,6 +5,7 @@
 plugins {
     id 'java-library'
     id "org.springframework.boot" version "2.7.18"
+    id "maven-publish"
 }
 
 repositories {
@@ -45,6 +46,17 @@ dependencies {
     testImplementation libs.json.path
     testImplementation libs.testcontainers.jupiter
     testImplementation libs.testcontainers.postgresql
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.alsab.boozycalc'
+            artifactId = 'cocktail'
+            version = '0.0.1'
+            from components.java
+        }
+    }
 }
 
 group = 'com.alsab.boozycalc'
