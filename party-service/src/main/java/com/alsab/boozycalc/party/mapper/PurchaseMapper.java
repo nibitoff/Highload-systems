@@ -7,7 +7,7 @@ import com.alsab.boozycalc.party.entity.PartyEntity;
 import com.alsab.boozycalc.party.entity.PurchaseEntity;
 import com.alsab.boozycalc.party.entity.PurchaseId;
 import com.alsab.boozycalc.party.service.ProductFeignService;
-import feign.Feign;
+import feign.FeignException;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -41,14 +41,15 @@ public abstract class PurchaseMapper {
 
     @AfterMapping
     public void mapId(PurchaseEntity purchase, @MappingTarget PurchaseDto dto){
-//        ProductMapper prod_mapper = Mappers.getMapper(ProductMapper.class);
-//        ProductDto prod_dto = prod_mapper.productToDto(purchase.getId().getProduct());
-
         PartyMapper party_mapper = Mappers.getMapper(PartyMapper.class);
         PartyDto party_dto = party_mapper.partyToDto(purchase.getId().getParty());
 
         dto.setParty(party_dto);
-        dto.setProduct(productFeignService.findById(purchase.getId().getProduct()));
+        try {
+            dto.setProduct(productFeignService.findById(purchase.getId().getProduct()));
+        } catch (FeignException e){
+            dto.setProduct(ProductDto.builder().id(purchase.getId().getProduct()).build());
+        }
     }
 
 
