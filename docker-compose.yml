@@ -93,7 +93,7 @@ services:
 
   cocktailsapp:
     depends_on:
-      - gateway
+      - eureka
     image: booze-cocktail:latest
     container_name: cocktail-service
     build:
@@ -114,7 +114,7 @@ services:
 
   authapp:
     depends_on:
-      - gateway
+      - eureka
     image: booze-auth:latest
     container_name: auth-service
     build:
@@ -135,25 +135,25 @@ services:
     ports:
       - 8182:8182
 
-#  partyapp:
-#    depends_on:
-#      - gateway
-#    image: booze-party:latest
-#    container_name: party-service
-#    build:
-#      context: ./party-service
-#      dockerfile: Dockerfile
-#    env_file:
-#      - .env
-#    environment:
-#      - PAGINATION_MAX_SIZE=50
-#      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
-#      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
-#      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
-#      - SPRING_PROFILES_ACTIVE=prod
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    ports:
-#      - 8183:8183
+  partyapp:
+    depends_on:
+      - eureka
+    image: booze-party:latest
+    container_name: party-service
+    build:
+      context: ./party-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PAGINATION_MAX_SIZE=50
+      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
+      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
+      - SPRING_PROFILES_ACTIVE=prod
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8183:8183
 volumes:
   db-data:
