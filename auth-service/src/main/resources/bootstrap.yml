@@ -3,5 +3,6 @@ spring:
     name: auth-service
   cloud:
     config:
+#      enabled: false
       fail-fast: true
       uri: http://config:8888

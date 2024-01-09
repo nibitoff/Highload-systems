@@ -22,7 +22,7 @@ dependencyResolutionManagement {
             library('spring-cloud-config', 'org.springframework.cloud', 'spring-cloud-starter-config').versionRef('spring-cloud')
             library('spring-cloud-bootstrap', 'org.springframework.cloud', 'spring-cloud-starter-bootstrap').versionRef('spring-cloud')
             library('spring-cloud-eureka', 'org.springframework.cloud', 'spring-cloud-starter-netflix-eureka-client').versionRef('spring-cloud')
-            library('spring-cloud-feign', 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE')
+            library('spring-cloud-feign', 'org.springframework.cloud', 'spring-cloud-starter-openfeign').versionRef('spring-cloud')
 
             library('jjwt-api', 'io.jsonwebtoken', 'jjwt-api').versionRef('io-json')
             library('jjwt-impl', 'io.jsonwebtoken', 'jjwt-impl').versionRef('io-json')
@@ -34,6 +34,9 @@ dependencyResolutionManagement {
             library('mapstruct-processor', 'org.mapstruct', 'mapstruct-processor').versionRef('mapstruct')
             library('lombok', 'org.projectlombok:lombok:1.18.30')
             library('postgresql', 'org.postgresql:postgresql:42.6.0')
+
+//            library('spring-webflux', 'org.springframework', 'spring-boot-starter-webflux').versionRef('spring-boot')
+            library('circuit-breaker', 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0')
 
             library('spring-boot-test', 'org.springframework.boot', 'spring-boot-starter-test').versionRef('spring-boot')
             library('spring-security-test', 'org.springframework.security:spring-security-test:6.0.2')

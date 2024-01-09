@@ -42,6 +42,15 @@ public class JwtUtilsService {
         return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody().getSubject();
     }
 
+//    public boolean validateToken(String token){
+//        try {
+//            Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+//            return true;
+//        } catch (Exception exception) {
+//            return false;
+//        }
+//    }
+
     public boolean validateJwtToken(String authToken, UserDetails userDetails) {
         try {
             Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(authToken);

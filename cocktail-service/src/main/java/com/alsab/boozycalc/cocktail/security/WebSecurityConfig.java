@@ -23,15 +23,15 @@ public class WebSecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/actuator/**").permitAll()
-                                .requestMatchers("/api/v1/**").permitAll()
+//                                .requestMatchers("/api/v1/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(
                         session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
 //                .authenticationProvider(authenticationProvider)
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

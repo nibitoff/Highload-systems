@@ -38,6 +38,8 @@ dependencies {
     api libs.jjwt.jackson
     api libs.gson
 
+    api libs.circuit.breaker
+
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
     testImplementation libs.spring.boot.test

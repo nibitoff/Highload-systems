@@ -1,5 +1,8 @@
 package com.alsab.boozycalc.cocktail.security;
 
+import com.alsab.boozycalc.cocktail.feign.AuthServiceFeignClient;
+import com.alsab.boozycalc.cocktail.security.payload.ValidationRequest;
+import com.alsab.boozycalc.cocktail.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,12 +15,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+
+
 
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
+    private final CircuitBreaker countCircuitBreaker;
+    private final AuthServiceFeignClient loginServiceFeignClient;
+    private final UserDetailsServiceImpl userDetailsService;
+
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -54,14 +65,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private String getUserNameFromJwtToken(String jwt){
-        return "null";
+        return countCircuitBreaker.decorateSupplier(() ->
+                loginServiceFeignClient.getLoginFromToken(ValidationRequest.builder().jwt(jwt).build()).getBody()).get();
     }
 
     private UserDetails getUserDetails(String username){
-        return null;
+        return userDetailsService.loadUserByUsername(username);
     }
 
     private boolean validateJwtToken(String jwt, String username){
-        return true;
+        return countCircuitBreaker.decorateSupplier(()->(boolean)
+                loginServiceFeignClient.validateJwtToken(ValidationRequest.builder().jwt(jwt).username(username).build()).getBody()).get();
     }
 }

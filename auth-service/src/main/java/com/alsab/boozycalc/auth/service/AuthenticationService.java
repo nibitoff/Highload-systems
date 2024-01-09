@@ -47,4 +47,9 @@ public class AuthenticationService {
         String jwt = jwtUtils.generateJwtToken(user);
         return AuthenticationResponse.builder().token(jwt).build();
     }
+
+//    public boolean validate(String token){
+//        return jwtUtils.validateToken(token);
+//    }
+
 }
