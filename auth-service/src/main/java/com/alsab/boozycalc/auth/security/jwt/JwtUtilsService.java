@@ -1,13 +1,16 @@
 package com.alsab.boozycalc.auth.security.jwt;
 
 
+import com.alsab.boozycalc.auth.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Log
 public class JwtUtilsService {
+    private final UserDetailsServiceImpl userDetailsService;
+
     @Value("${jwt.secret}")
     private String jwtSecret;
 
@@ -42,14 +47,30 @@ public class JwtUtilsService {
         return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody().getSubject();
     }
 
-//    public boolean validateToken(String token){
-//        try {
-//            Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
-//            return true;
-//        } catch (Exception exception) {
-//            return false;
-//        }
-//    }
+    public boolean doFilterFromRequest(String jwt){
+        final String username;
+
+        try {
+            username = getUserNameFromJwtToken(jwt);
+        } catch (io.jsonwebtoken.security.SignatureException | io.jsonwebtoken.ExpiredJwtException e){
+            return false;
+        }
+
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if(validateJwtToken(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
 
     public boolean validateJwtToken(String authToken, UserDetails userDetails) {
         try {
@@ -64,7 +85,6 @@ public class JwtUtilsService {
         } catch (IllegalArgumentException e) {
             log.info("JWT claims string is empty: {" + e + "}");
         }
-
         return false;
     }
 

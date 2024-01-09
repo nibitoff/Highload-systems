@@ -1,20 +1,9 @@
 server:
   port: 8080
-spring:
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-      routes:
-        - id: party-service-purchases
-          uri: http://localhost:8183
-          predicates:
-            - Path=/purchases/**
-          filters:
-            - PrefixPath=/api/v1
 
+jwt:
+  secret: bbce7e869ae83a92d6c4d2c95bda94fa84f916208d5bb0fde7ba5aa34a9b8e0e
+  expiration: 1800000
 eureka:
   client:
     serviceUrl:

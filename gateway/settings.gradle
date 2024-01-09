@@ -23,7 +23,8 @@ dependencyResolutionManagement {
             library('spring-cloud-bootstrap', 'org.springframework.cloud', 'spring-cloud-starter-bootstrap').versionRef('spring-cloud')
             library('spring-cloud-eureka', 'org.springframework.cloud', 'spring-cloud-starter-netflix-eureka-client').versionRef('spring-cloud')
             library('spring-cloud-gateway', 'org.springframework.cloud', 'spring-cloud-starter-gateway').versionRef('spring-cloud')
-            library('spring-cloud-feign', 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE')
+            library('spring-cloud-feign', 'org.springframework.cloud', 'spring-cloud-starter-openfeign').versionRef('spring-cloud')
+            library('circuit-breaker', 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0')
 
             library('jjwt-api', 'io.jsonwebtoken', 'jjwt-api').versionRef('io-json')
             library('jjwt-impl', 'io.jsonwebtoken', 'jjwt-impl').versionRef('io-json')

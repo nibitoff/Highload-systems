@@ -22,4 +22,3 @@ jwt:
   expiration: 1800000
 pagination:
   maxSize: ${PAGINATION_MAX_SIZE}
-

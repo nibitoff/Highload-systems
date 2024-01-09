@@ -33,18 +33,18 @@ public class AuthController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<Boolean> validate(@RequestBody ValidationRequest request) {
-        return ResponseEntity.ok(jwtUtilsService.validateJwtToken(request.getJwt(), userDetailsService.loadUserByUsername(request.getUsername())));
+    public ResponseEntity<Boolean> validate(@RequestBody String token) {
+        return ResponseEntity.ok(jwtUtilsService.validateJwtToken(token, userDetailsService.loadUserByUsername(jwtUtilsService.getUserNameFromJwtToken(token))));
+    }
+
+    @PostMapping("/do-filter")
+    public ResponseEntity<Boolean> filter(@RequestBody String token) {
+        return ResponseEntity.ok(jwtUtilsService.doFilterFromRequest(token));
     }
 
     @PostMapping("/get-login-from-token")
     public ResponseEntity<String> getLoginFromToken(@RequestBody ValidationRequest request) {
         return ResponseEntity.ok(jwtUtilsService.getUserNameFromJwtToken(request.getJwt()));
     }
-
-//    @PostMapping("/validate")
-//    public ResponseEntity<Boolean> validate(@RequestBody String token) {
-//        return ResponseEntity.ok(authenticationService.validate(token));
-//    }
 
 }
