@@ -91,26 +91,26 @@ services:
         condition: service_healthy
 
 
-  cocktailsapp:
-    depends_on:
-      - eureka
-    image: booze-cocktail:latest
-    container_name: cocktail-service
-    build:
-      context: ./cocktail-service
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    environment:
-      - PAGINATION_MAX_SIZE=50
-      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
-      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
-      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
-      - SPRING_PROFILES_ACTIVE=prod
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 8181:8181
+#  cocktailsapp:
+#    depends_on:
+#      - eureka
+#    image: booze-cocktail:latest
+#    container_name: cocktail-service
+#    build:
+#      context: ./cocktail-service
+#      dockerfile: Dockerfile
+#    env_file:
+#      - .env
+#    environment:
+#      - PAGINATION_MAX_SIZE=50
+#      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
+#      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
+#      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
+#      - SPRING_PROFILES_ACTIVE=prod
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    ports:
+#      - 8181:8181
 
   authapp:
     depends_on:
@@ -135,25 +135,25 @@ services:
     ports:
       - 8182:8182
 
-  partyapp:
-    depends_on:
-      - eureka
-    image: booze-party:latest
-    container_name: party-service
-    build:
-      context: ./party-service
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    environment:
-      - PAGINATION_MAX_SIZE=50
-      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
-      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
-      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
-      - SPRING_PROFILES_ACTIVE=prod
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 8183:8183
+#  partyapp:
+#    depends_on:
+#      - eureka
+#    image: booze-party:latest
+#    container_name: party-service
+#    build:
+#      context: ./party-service
+#      dockerfile: Dockerfile
+#    env_file:
+#      - .env
+#    environment:
+#      - PAGINATION_MAX_SIZE=50
+#      - POSTGRES_USER=${DOCKER_POSTGRES_USER}
+#      - POSTGRES_PASS=${DOCKER_POSTGRES_PASSWORD}
+#      - POSTGRES_DB=${DOCKER_POSTGRES_DB}
+#      - SPRING_PROFILES_ACTIVE=prod
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    ports:
+#      - 8183:8183
 volumes:
   db-data:

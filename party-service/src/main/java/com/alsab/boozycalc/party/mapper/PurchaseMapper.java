@@ -29,22 +29,18 @@ public abstract class PurchaseMapper {
 
     @AfterMapping
     public void mapId(PurchaseDto dto, @MappingTarget PurchaseEntity purchase){
-//        ProductMapper prod_mapper = Mappers.getMapper(ProductMapper.class);
-//        ProductEntity product = prod_mapper.dtoToProduct(dto.getProduct());
-
         PartyMapper party_mapper = Mappers.getMapper(PartyMapper.class);
         PartyEntity party = party_mapper.dtoToParty(dto.getParty());
 
         purchase.setId(new PurchaseId(dto.getProduct().getId(), party));
-
     }
 
     @AfterMapping
     public void mapId(PurchaseEntity purchase, @MappingTarget PurchaseDto dto){
         PartyMapper party_mapper = Mappers.getMapper(PartyMapper.class);
         PartyDto party_dto = party_mapper.partyToDto(purchase.getId().getParty());
-
         dto.setParty(party_dto);
+
         try {
             dto.setProduct(productFeignService.findById(purchase.getId().getProduct()));
         } catch (FeignException e){

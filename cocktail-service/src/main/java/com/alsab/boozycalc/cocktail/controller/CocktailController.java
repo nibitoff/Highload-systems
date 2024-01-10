@@ -44,6 +44,15 @@ public class CocktailController {
         }
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<?> findById(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(cocktailDataService.findById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<?> addNewCocktail(@Valid @RequestBody CocktailDto cocktail) {

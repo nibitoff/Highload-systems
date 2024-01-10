@@ -34,6 +34,15 @@ public class RecipeController {
         }
     }
 
+    @GetMapping("/find-by-cocktail")
+    public ResponseEntity<?> findAllByCocktail(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(recipeDataService.findAllByCocktail(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> addNewRecipe(@Valid @RequestBody RecipeDto recipe) {
         try {
