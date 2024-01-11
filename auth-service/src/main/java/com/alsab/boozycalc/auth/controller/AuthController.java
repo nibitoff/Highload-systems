@@ -1,5 +1,6 @@
 package com.alsab.boozycalc.auth.controller;
 
+import com.alsab.boozycalc.auth.exception.UsernameIsAlreadyTakenException;
 import com.alsab.boozycalc.auth.security.UserDetailsServiceImpl;
 import com.alsab.boozycalc.auth.security.jwt.JwtUtilsService;
 import com.alsab.boozycalc.auth.security.payload.AuthenticationRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import reactor.core.publisher.Mono;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,8 +25,12 @@ public class AuthController {
     private final UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authenticationService.register(request));
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        try {
+            return ResponseEntity.ok(authenticationService.register(request));
+        } catch (UsernameIsAlreadyTakenException e){
+            return ResponseEntity.badRequest().body(Mono.error(e));
+        }
     }
 
     @PostMapping("/authenticate")

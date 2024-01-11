@@ -1,46 +1,38 @@
 package com.alsab.boozycalc.auth.service.data;
 
 import com.alsab.boozycalc.auth.dto.UserDto;
-import com.alsab.boozycalc.auth.entity.UserEntity;
 import com.alsab.boozycalc.auth.exception.ItemNotFoundException;
 import com.alsab.boozycalc.auth.mapper.UserMapper;
 import com.alsab.boozycalc.auth.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
 public class UserDataService {
-    private final UserRepo userRepo;
-    private final UserMapper userMapper;
+    private final UserRepo repo;
+    private final UserMapper mapper;
 
-    public Iterable<UserEntity> findAll() {
-        return userRepo.findAll();
+    public Flux<UserDto> findAll() {
+        return repo.findAll().map(mapper::userToDto);
     }
 
-    public UserDto findById(Long id) throws ItemNotFoundException {
-        return userMapper.userToDto(
-                userRepo.findById(id).orElseThrow(() -> new ItemNotFoundException(UserDto.class, id))
-        );
+    public Mono<UserDto> findById(Long id) throws ItemNotFoundException {
+        return repo.findById(id).map(mapper::userToDto);
     }
 
-    public UserDto findByUserName(String username) throws UsernameNotFoundException {
-        return userMapper.userToDto(
-                userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("no user find with username " + username))
-        );
+    public Mono<UserDto> findByUserName(String username) throws UsernameNotFoundException {
+        return repo.findByUsername(username).map(mapper::userToDto);
     }
 
-    public UserDto saveUser(UserDto userDto) {
-        return userMapper.userToDto(userRepo.save(userMapper.dtoToUser(userDto)));
+    public Mono<UserDto> saveUser(UserDto userDto) {
+        return repo.save(mapper.dtoToUser(userDto)).map(mapper::userToDto);
     }
 
-    public boolean userExists(String username) {
-        try {
-            findByUserName(username);
-            return true;
-        } catch (UsernameNotFoundException e) {
-            return false;
-        }
+    public Mono<Boolean> userExists(String username) {
+        return repo.existsByUsername(username);
     }
 }
