@@ -4,7 +4,7 @@
 
 plugins {
     id 'java-library'
-    id "org.springframework.boot" version "2.7.18"
+    id "org.springframework.boot" version "3.2.0"
     id "maven-publish"
 }
 
@@ -29,7 +29,6 @@ dependencies {
 
     api libs.spring.cloud.bootstrap
     api libs.spring.cloud.config
-    api libs.spring.cloud.feign
     api libs.spring.cloud.eureka
 
     api libs.postgresql
@@ -37,8 +36,6 @@ dependencies {
     api libs.jjwt.impl
     api libs.jjwt.jackson
     api libs.gson
-
-    api libs.circuit.breaker
 
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
