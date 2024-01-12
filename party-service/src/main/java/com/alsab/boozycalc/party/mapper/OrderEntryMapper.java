@@ -16,10 +16,12 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {CocktailFeignService.class, OrderMapper.class})
+@Mapper(componentModel = "spring", uses = {CocktailFeignService.class})
 public abstract class OrderEntryMapper {
     @Autowired
     FeignCocktailServiceClient feignCocktailServiceClient;
+    @Autowired
+    OrderMapper orderMapper;
 
     @Mapping(target = "id", ignore = true)
     public abstract OrderEntryEntity dtoToOrderEntry(OrderEntryDto dto);
@@ -39,8 +41,8 @@ public abstract class OrderEntryMapper {
 
     @AfterMapping
     public void mapId(OrderEntryEntity orderEntry, @MappingTarget OrderEntryDto dto){
-        OrderMapper order_mapper = Mappers.getMapper(OrderMapper.class);
-        OrderDto order_dto = order_mapper.orderToDto(orderEntry.getId().getOrder());
+//        OrderMapper order_mapper = Mappers.getMapper(OrderMapper.class);
+        OrderDto order_dto = orderMapper.orderToDto(orderEntry.getId().getOrder());
         dto.setOrder(order_dto);
 
         try {

@@ -27,6 +27,18 @@ public class GatewayConfig {
                 .route("party-service-purchases", r -> r.path("/purchases/**")
                         .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
                         .uri("lb://party-service"))
+                .route("party-service-menus", r -> r.path("/menus/**")
+                        .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
+                        .uri("lb://party-service"))
+                .route("party-service-parties", r -> r.path("/parties/**")
+                        .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
+                        .uri("lb://party-service"))
+                .route("party-service-orders", r -> r.path("/orders/**")
+                        .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
+                        .uri("lb://party-service"))
+                .route("party-service-invites", r -> r.path("/invites/**")
+                        .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
+                        .uri("lb://party-service"))
 //                        .uri("http://localhost:8183"))
                 .build();
     }

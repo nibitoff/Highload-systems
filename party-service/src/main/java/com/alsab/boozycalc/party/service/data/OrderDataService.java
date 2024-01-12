@@ -2,10 +2,15 @@ package com.alsab.boozycalc.party.service.data;
 
 import com.alsab.boozycalc.party.dto.OrderDto;
 import com.alsab.boozycalc.party.dto.PartyDto;
+import com.alsab.boozycalc.party.dto.PurchaseDto;
+import com.alsab.boozycalc.party.dto.UserDto;
 import com.alsab.boozycalc.party.exception.ItemNotFoundException;
 import com.alsab.boozycalc.party.mapper.OrderMapper;
 import com.alsab.boozycalc.party.repository.OrderRepo;
+import com.alsab.boozycalc.party.service.AuthFeignService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +20,7 @@ import java.util.List;
 public class OrderDataService {
     private final OrderRepo orderRepo;
     private final OrderMapper mapper;
+    private final AuthFeignService authFeignService;
 
     public List<OrderDto> findAll() {
         return orderRepo.findAll().stream().map(mapper::orderToDto).toList();
@@ -41,19 +47,17 @@ public class OrderDataService {
     }
 
     public OrderDto findByPartyAndUser(PartyDto party, UserDto user) {
+        UserDto userDto = authFeignService.findById(user.getId());
         return mapper.orderToDto(
-                orderRepo.findByPartyAndUser(party.getId(), user.getId())
+                orderRepo.findByPartyAndUser(party.getId(), userDto.getId())
                         .orElseThrow(() -> new ItemNotFoundException(OrderDto.class, party.getId()))
         );
     }
 
-    public boolean existsByPartyAndUser(PartyDto party, UserDto user) {
-        try {
-            findByPartyAndUser(party, user);
-            return true;
-        } catch (ItemNotFoundException e){
-            return false;
-        }
-    }
+//    public Iterable<OrderDto> findAllWithPagination(Integer page){
+//        Pageable pageable = PageRequest.of(page, 50);
+//        return orderRepo.findAllWithPagination(pageable).stream().map(mapper::orderToDto).toList();
+//    }
+
 
 }

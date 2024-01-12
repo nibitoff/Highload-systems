@@ -19,4 +19,6 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name = "party_id", referencedColumnName = "id")
     private PartyEntity party;
+    @Column(name = "person_id")
+    private Long person;
 }

@@ -1,5 +1,6 @@
 package com.alsab.boozycalc.party.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,8 +20,7 @@ public class OrderEntryId implements Serializable {
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private OrderEntity order;
 
-    @ManyToOne
-    @JoinColumn(name = "cocktail_id")
+    @Column(name = "cocktail_id")
     private Long cocktail;
 
     @Override
