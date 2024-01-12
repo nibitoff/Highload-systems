@@ -22,9 +22,9 @@ public class AuthenticationService {
     private final JwtUtilsService jwtUtils;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request){
-        if(userDataService.userExists(request.getUsername())) throw new UsernameIsAlreadyTakenException(request.getUsername());
-
+    public AuthenticationResponse register(RegisterRequest request) {
+        Boolean b = userDataService.userExists(request.getUsername()).block();
+        if (b == null || b) throw new UsernameIsAlreadyTakenException(request.getUsername());
         UserDto user = UserDto.builder()
                 .realName(request.getRealname())
                 .username(request.getUsername())
@@ -33,17 +33,17 @@ public class AuthenticationService {
                 .build();
         userDataService.saveUser(user);
         String jwt = jwtUtils.generateJwtToken(user);
-        return AuthenticationResponse.builder().token(jwt).build();
+        return new AuthenticationResponse(jwt);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
-        UserDto user = userDataService.findByUserName(request.getUsername());
+        UserDto user = userDataService.findByUserName(request.getUsername()).block();
         String jwt = jwtUtils.generateJwtToken(user);
         return AuthenticationResponse.builder().token(jwt).build();
     }

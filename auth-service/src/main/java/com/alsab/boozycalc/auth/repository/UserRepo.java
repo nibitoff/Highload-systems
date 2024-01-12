@@ -2,12 +2,12 @@ package com.alsab.boozycalc.auth.repository;
 
 
 import com.alsab.boozycalc.auth.entity.UserEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 @Repository
-public interface UserRepo extends CrudRepository<UserEntity, Long> {
-   Optional<UserEntity> findByUsername(String username);
+public interface UserRepo extends R2dbcRepository<UserEntity, Long> {
+   Mono<UserEntity> findByUsername(String username);
+   Mono<Boolean> existsByUsername(String username);
 }

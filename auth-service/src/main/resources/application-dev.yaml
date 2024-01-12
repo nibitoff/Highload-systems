@@ -13,6 +13,10 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/boozyCalc
+    username: docker_user
+    password: passphrase
 eureka:
   client:
     serviceUrl:

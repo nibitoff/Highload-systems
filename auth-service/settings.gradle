@@ -23,6 +23,8 @@ dependencyResolutionManagement {
             library('spring-cloud-bootstrap', 'org.springframework.cloud', 'spring-cloud-starter-bootstrap').versionRef('spring-cloud')
             library('spring-cloud-eureka', 'org.springframework.cloud', 'spring-cloud-starter-netflix-eureka-client').versionRef('spring-cloud')
             library('spring-cloud-feign', 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE')
+            library('spring-r2dbc', 'org.springframework.boot', 'spring-boot-starter-data-r2dbc').versionRef('spring-boot')
+            library('spring-webflux', 'org.springframework.boot', 'spring-boot-starter-webflux').versionRef('spring-boot')
 
             library('jjwt-api', 'io.jsonwebtoken', 'jjwt-api').versionRef('io-json')
             library('jjwt-impl', 'io.jsonwebtoken', 'jjwt-impl').versionRef('io-json')

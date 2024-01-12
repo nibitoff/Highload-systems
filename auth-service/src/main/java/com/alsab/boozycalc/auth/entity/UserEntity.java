@@ -1,30 +1,32 @@
 package com.alsab.boozycalc.auth.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "users")
+@Table( "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column("username")
     private String username;
 
-    @Column(name = "password")
+    @Column("password")
     private String password;
 
-    @Column(name = "real_name")
+    @Column("real_name")
     private String realName;
 
-    @Column(name = "role")
+    @Column("role")
     @Enumerated(EnumType.STRING)
     RoleEnum role;
 }
