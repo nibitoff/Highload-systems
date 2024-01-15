@@ -1,6 +1,5 @@
 package com.alsab.boozycalc.auth.controller;
 
-import com.alsab.boozycalc.auth.exception.UsernameIsAlreadyTakenException;
 import com.alsab.boozycalc.auth.security.UserDetailsServiceImpl;
 import com.alsab.boozycalc.auth.security.jwt.JwtUtilsService;
 import com.alsab.boozycalc.auth.security.payload.AuthenticationRequest;
@@ -25,17 +24,17 @@ public class AuthController {
     private final UserDataService userDataService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        try {
-            return ResponseEntity.ok(authenticationService.register(request));
-        } catch (UsernameIsAlreadyTakenException e){
-            return ResponseEntity.badRequest().body(Mono.error(e));
-        }
+    public Mono<ResponseEntity<AuthenticationResponse>> register(@RequestBody RegisterRequest request) {
+        return authenticationService.register(request).map(ResponseEntity::ok)
+                .onErrorResume(e -> Mono.empty())
+                .switchIfEmpty(Mono.just(ResponseEntity.badRequest().body(new AuthenticationResponse(""))));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+    public Mono<ResponseEntity<AuthenticationResponse>> authenticate(@RequestBody AuthenticationRequest request) {
+        return authenticationService.authenticate(request).map(ResponseEntity::ok)
+                .onErrorResume(e -> Mono.empty())
+                .switchIfEmpty(Mono.just(ResponseEntity.badRequest().body(new AuthenticationResponse(""))));
     }
 
     @PostMapping("/validate")

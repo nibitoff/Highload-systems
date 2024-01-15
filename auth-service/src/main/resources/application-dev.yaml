@@ -1,22 +1,5 @@
 server:
   port: 8182
-spring:
-  datasource:
-    hikari:
-      maximum-pool-size: 50
-      connection-timeout: 6000
-    url: jdbc:postgresql://localhost:5432/boozyCalc
-    username: docker_user
-    password: passphrase
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: none
-  r2dbc:
-    url: r2dbc:postgresql://localhost:5432/boozyCalc
-    username: docker_user
-    password: passphrase
 eureka:
   client:
     serviceUrl:

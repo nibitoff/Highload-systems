@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -22,34 +23,37 @@ public class AuthenticationService {
     private final JwtUtilsService jwtUtils;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
-        Boolean b = userDataService.userExists(request.getUsername()).block();
-        if (b == null || b) throw new UsernameIsAlreadyTakenException(request.getUsername());
-        UserDto user = UserDto.builder()
-                .realName(request.getRealname())
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(RoleEnum.USER)
-                .build();
-        userDataService.saveUser(user);
-        String jwt = jwtUtils.generateJwtToken(user);
-        return new AuthenticationResponse(jwt);
+    public Mono<AuthenticationResponse> register(RegisterRequest req) {
+        return userDataService.userExists(req.getUsername()).flatMap(
+                b -> {
+                    if (b) throw new UsernameIsAlreadyTakenException(req.getUsername());
+                    UserDto user = UserDto.builder()
+                            .id(null)
+                            .realName(req.getRealname())
+                            .username(req.getUsername())
+                            .password(passwordEncoder.encode(req.getPassword()))
+                            .role(RoleEnum.USER)
+                            .build();
+                    userDataService.saveUser(user);
+                    String jwt = jwtUtils.generateJwtToken(user);
+                    return Mono.just(new AuthenticationResponse(jwt));
+                });
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-        UserDto user = userDataService.findByUserName(request.getUsername()).block();
-        String jwt = jwtUtils.generateJwtToken(user);
-        return AuthenticationResponse.builder().token(jwt).build();
+    public Mono<AuthenticationResponse> authenticate(AuthenticationRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            return Mono.error(e);
+        }
+        return userDataService.findByUserName(request.getUsername()).flatMap(user -> {
+            String jwt = jwtUtils.generateJwtToken(user);
+            return Mono.just(AuthenticationResponse.builder().token(jwt).build());
+        });
     }
-
-//    public boolean validate(String token){
-//        return jwtUtils.validateToken(token);
-//    }
-
 }

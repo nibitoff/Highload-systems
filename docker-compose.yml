@@ -153,7 +153,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-#    ports:
-#      - 8183:8183
+    ports:
+      - 8183:8183
 volumes:
   db-data:

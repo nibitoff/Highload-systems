@@ -27,10 +27,8 @@ dependencies {
 
     api libs.spring.cloud.bootstrap
     api libs.spring.cloud.config
-    api libs.spring.cloud.feign
     api libs.spring.cloud.eureka
 
-    api libs.spring.boot.data
     api libs.spring.r2dbc
     runtimeOnly 'io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE'
     api libs.spring.webflux
