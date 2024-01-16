@@ -8,7 +8,6 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     id 'java-library'
     id "org.springframework.boot" version "3.2.0"
-    id "maven-publish"
     id 'jacoco'
 }
 
@@ -50,17 +49,6 @@ dependencies {
     testImplementation libs.testcontainers.jupiter
     testImplementation libs.testcontainers.postgresql
     testImplementation libs.liquibase
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'com.alsab.boozycalc'
-            artifactId = 'cocktail'
-            version = '0.0.1'
-            from components.java
-        }
-    }
 }
 
 group = 'com.alsab.boozycalc'
