@@ -36,7 +36,8 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
                                EntityManagerFactory entityManagerFactory,
                                IngredientTypeRepo ingredientTypeRepo,
                                IngredientTypeDataService ingredientTypeDataService,
-                               IngredientDataService ingredientDataService) {
+                               IngredientDataService ingredientDataService
+    ) {
         super(webApplicationContext, entityManagerFactory);
         this.ingredientTypeRepo = ingredientTypeRepo;
         this.ingredientTypeDataService = ingredientTypeDataService;
