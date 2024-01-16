@@ -1,0 +1,15 @@
+{
+  "id": 6,
+  "name": "Coca-cola",
+  "description": null,
+  "ingredient": {
+    "id": 6,
+    "name": "Coke",
+    "description": null,
+    "type": {
+      "id": 5,
+      "name": "drink"
+    }
+  },
+  "price": 0.111
+}

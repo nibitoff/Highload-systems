@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "name": "Bacardi Blanco",
+  "description": null,
+  "ingredient": {
+    "id": 1,
+    "name": "White Rum",
+    "description": null,
+    "type": {
+      "id": 1,
+      "name": "spirit"
+    }
+  },
+  "price": 1.57
+}

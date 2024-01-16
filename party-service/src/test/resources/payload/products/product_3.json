@@ -1,0 +1,15 @@
+{
+  "id": 3,
+  "name": "Sady Pridonia Premium orange",
+  "description": null,
+  "ingredient": {
+    "id": 3,
+    "name": "Orange Juice",
+    "description": null,
+    "type": {
+      "id": 3,
+      "name": "juice"
+    }
+  },
+  "price": 0.15
+}

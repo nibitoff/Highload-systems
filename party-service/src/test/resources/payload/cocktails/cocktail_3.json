@@ -1,0 +1,11 @@
+{
+  "id": 3,
+  "name": "Cuba Libre",
+  "description": null,
+  "steps": null,
+  "type": {
+    "id": 4,
+    "name": "highball",
+    "description": null
+  }
+}

@@ -1,5 +1,9 @@
 package com.alsab.boozycalc.party;
 
+import com.alsab.boozycalc.party.config.WireMockConfig;
+import com.alsab.boozycalc.party.wiremocks.CocktailMocks;
+import com.alsab.boozycalc.party.wiremocks.ProductMocks;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -13,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -25,6 +30,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.util.List;
 
 @ActiveProfiles("test")
+@Import(WireMockConfig.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,6 +40,7 @@ public abstract class MockMvcTestContainersTest implements Extension {
     private MockMvc mockMvc;
     private final WebApplicationContext webApplicationContext;
     private final EntityManagerFactory entityManagerFactory;
+    private final WireMockServer mockCocktailService;
 
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
 
@@ -57,6 +64,8 @@ public abstract class MockMvcTestContainersTest implements Extension {
     @BeforeEach
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        CocktailMocks.setupMockCocktailResponse(mockCocktailService, List.of(1, 2, 3));
+        ProductMocks.setupMockProductResponse(mockCocktailService, List.of(1, 2, 3, 4, 5, 6));
     }
 
     @BeforeEach

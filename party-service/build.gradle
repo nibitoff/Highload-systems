@@ -54,6 +54,7 @@ dependencies {
     testImplementation libs.testcontainers.jupiter
     testImplementation libs.testcontainers.postgresql
     testImplementation libs.liquibase
+    testImplementation libs.wiremock
 }
 
 group = 'com.alsab.boozycalc'

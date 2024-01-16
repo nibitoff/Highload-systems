@@ -1,0 +1,15 @@
+{
+  "id": 4,
+  "name": "Homemade lemon",
+  "description": null,
+  "ingredient": {
+    "id": 4,
+    "name": "Lemon Juice",
+    "description": null,
+    "type": {
+      "id": 3,
+      "name": "juice"
+    }
+  },
+  "price": 0.224
+}

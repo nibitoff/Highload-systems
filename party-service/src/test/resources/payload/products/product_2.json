@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "name": "Orthodox",
+  "description": null,
+  "ingredient": {
+    "id": 2,
+    "name": "Vodka",
+    "description": null,
+    "type": {
+      "id": 1,
+      "name": "spirit"
+    }
+  },
+  "price": 0.8
+}

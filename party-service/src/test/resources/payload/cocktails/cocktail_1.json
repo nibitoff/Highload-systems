@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "name": "Daiquiri",
+  "description": null,
+  "steps": null,
+  "type": {
+    "id": 1,
+    "name": "sour",
+    "description": null
+  }
+}

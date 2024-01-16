@@ -4,6 +4,7 @@ import com.alsab.boozycalc.party.MockMvcTestContainersTest;
 import com.alsab.boozycalc.party.dto.*;
 import com.alsab.boozycalc.party.service.data.PartyDataService;
 import com.alsab.boozycalc.party.service.data.PurchaseDataService;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,10 @@ public class PurchasesCRUDTest extends MockMvcTestContainersTest {
     public PurchasesCRUDTest(
             WebApplicationContext webApplicationContext,
             EntityManagerFactory entityManagerFactory,
+            WireMockServer mockCocktailService,
             PartyDataService partyDataService,
             PurchaseDataService purchaseDataService) {
-        super(webApplicationContext, entityManagerFactory);
+        super(webApplicationContext, entityManagerFactory, mockCocktailService);
         this.partyDataService = partyDataService;
         this.purchaseDataService = purchaseDataService;
     }
@@ -63,23 +65,23 @@ public class PurchasesCRUDTest extends MockMvcTestContainersTest {
         counter.set(0);
         this.ingredients =
                 Stream.of(
-                        new IngredientDto(0L, "White Rum", "", ingredientTypes.get(0)),
-                        new IngredientDto(1L, "Vodka", "", ingredientTypes.get(0)),
-                        new IngredientDto(2L, "Orange Juice", "", ingredientTypes.get(2)),
-                        new IngredientDto(3L, "Lemon Juice", "", ingredientTypes.get(2)),
-                        new IngredientDto(4L, "Simple Syrup", "", ingredientTypes.get(3)),
-                        new IngredientDto(5L, "Coke", "", ingredientTypes.get(4))
+                        new IngredientDto(1L, "White Rum", "", ingredientTypes.get(0)),
+                        new IngredientDto(2L, "Vodka", "", ingredientTypes.get(0)),
+                        new IngredientDto(3L, "Orange Juice", "", ingredientTypes.get(2)),
+                        new IngredientDto(4L, "Lemon Juice", "", ingredientTypes.get(2)),
+                        new IngredientDto(5L, "Simple Syrup", "", ingredientTypes.get(3)),
+                        new IngredientDto(6L, "Coke", "", ingredientTypes.get(4))
                 ).toList();
 
         counter.set(0);
         this.products =
                 Stream.of(
-                        new ProductDto(0L, "Bacardi Blanco", "", ingredients.get(0), 1.57f),
-                        new ProductDto(1L, "Orthodox", "", ingredients.get(1), 0.8f),
-                        new ProductDto(2L, "Sady Pridonia Premium orange", "", ingredients.get(2), 0.15f),
-                        new ProductDto(3L, "Homemade lemon", "", ingredients.get(3), 0.224f),
-                        new ProductDto(4L, "Barinoff simple syrup", "", ingredients.get(4), 0.381f),
-                        new ProductDto(5L, "Coca-cola", "", ingredients.get(5), 0.111f)
+                        new ProductDto(1L, "Bacardi Blanco", "", ingredients.get(0), 1.57f),
+                        new ProductDto(2L, "Orthodox", "", ingredients.get(1), 0.8f),
+                        new ProductDto(3L, "Sady Pridonia Premium orange", "", ingredients.get(2), 0.15f),
+                        new ProductDto(4L, "Homemade lemon", "", ingredients.get(3), 0.224f),
+                        new ProductDto(5L, "Barinoff simple syrup", "", ingredients.get(4), 0.381f),
+                        new ProductDto(6L, "Coca-cola", "", ingredients.get(5), 0.111f)
                 ).toList();
     }
 
@@ -108,5 +110,36 @@ public class PurchasesCRUDTest extends MockMvcTestContainersTest {
         super.getMockMvc()
                 .perform(get("/api/v1/purchases/all"))
                 .andExpectAll(status().isOk(), jsonPath("$", hasSize(purchases.size())));
+    }
+
+    @Test
+    public void getPage() throws Exception {
+        createCocktailServiceBase();
+        createParties();
+        createPurchases();
+        super.getMockMvc()
+                .perform(get("/api/v1/purchases/all/0"))
+                .andExpectAll(status().isOk(), jsonPath("$", hasSize(purchases.size())))
+                .andDo(r -> System.out.println(r.getResponse().getContentAsString()));
+    }
+
+    @Test
+    public void getEmptyPage() throws Exception {
+        createCocktailServiceBase();
+        createParties();
+        createPurchases();
+        super.getMockMvc()
+                .perform(get("/api/v1/purchases/all/1"))
+                .andExpectAll(status().isOk(), jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void getNegativePage() throws Exception {
+        createCocktailServiceBase();
+        createParties();
+        createPurchases();
+        super.getMockMvc()
+                .perform(get("/api/v1/purchases/all/-1"))
+                .andExpect(status().isBadRequest());
     }
 }

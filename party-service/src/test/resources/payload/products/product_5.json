@@ -1,0 +1,15 @@
+{
+  "id": 5,
+  "name": "Barinoff simple syrup",
+  "description": null,
+  "ingredient": {
+    "id": 5,
+    "name": "Simple Syrup",
+    "description": null,
+    "type": {
+      "id": 4,
+      "name": "syrup"
+    }
+  },
+  "price": 0.381
+}

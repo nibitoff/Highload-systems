@@ -1,0 +1,11 @@
+{
+  "id": 2,
+  "name": "Screwdriver",
+  "description": null,
+  "steps": null,
+  "type": {
+    "id": 3,
+    "name": "duo",
+    "description": null
+  }
+}

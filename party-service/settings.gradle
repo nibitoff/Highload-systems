@@ -37,6 +37,7 @@ dependencyResolutionManagement {
             library('testcontainers-jupiter', 'org.testcontainers', 'junit-jupiter').versionRef('testcontainers')
             library('testcontainers-postgresql', 'org.testcontainers', 'postgresql').versionRef('testcontainers')
             library('liquibase', 'org.liquibase', 'liquibase-core').version('4.25.1')
+            library('wiremock', 'com.github.tomakehurst', 'wiremock').version('3.0.1')
         }
     }
 }
