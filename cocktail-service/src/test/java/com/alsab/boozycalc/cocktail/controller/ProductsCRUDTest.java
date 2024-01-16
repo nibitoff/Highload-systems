@@ -1,14 +1,8 @@
 package com.alsab.boozycalc.cocktail.controller;
 
 import com.alsab.boozycalc.cocktail.MockMvcTestContainersTest;
-import com.alsab.boozycalc.cocktail.dto.CocktailDto;
-import com.alsab.boozycalc.cocktail.dto.CocktailTypeDto;
-import com.alsab.boozycalc.cocktail.dto.IngredientDto;
-import com.alsab.boozycalc.cocktail.dto.IngredientTypeDto;
-import com.alsab.boozycalc.cocktail.service.data.CocktailDataService;
-import com.alsab.boozycalc.cocktail.service.data.CocktailTypeDataService;
-import com.alsab.boozycalc.cocktail.service.data.IngredientDataService;
-import com.alsab.boozycalc.cocktail.service.data.IngredientTypeDataService;
+import com.alsab.boozycalc.cocktail.dto.*;
+import com.alsab.boozycalc.cocktail.service.data.*;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,34 +20,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(properties = "spring.cloud.config.enabled=false")
 @DirtiesContext
-public class CocktailsCRUDTest extends MockMvcTestContainersTest {
+public class ProductsCRUDTest extends MockMvcTestContainersTest {
     private final IngredientTypeDataService ingredientTypeDataService;
     private final IngredientDataService ingredientDataService;
-    private final CocktailTypeDataService cocktailTypeDataService;
-    private final CocktailDataService cocktailDataService;
+    private final ProductDataService productDataService;
 
     @Autowired
-    public CocktailsCRUDTest(
+    public ProductsCRUDTest(
             WebApplicationContext webApplicationContext,
             EntityManagerFactory entityManagerFactory,
             IngredientTypeDataService ingredientTypeDataService,
             IngredientDataService ingredientDataService,
-            CocktailTypeDataService cocktailTypeDataService,
-            CocktailDataService cocktailDataService
+            ProductDataService productDataService
     ) {
         super(webApplicationContext, entityManagerFactory);
         this.ingredientTypeDataService = ingredientTypeDataService;
         this.ingredientDataService = ingredientDataService;
-        this.cocktailTypeDataService = cocktailTypeDataService;
-        this.cocktailDataService = cocktailDataService;
+        this.productDataService = productDataService;
     }
-
 
     private List<IngredientTypeDto> ingredientTypes;
     private List<IngredientDto> ingredients;
-    private List<CocktailTypeDto> cocktailTypes;
-    private List<CocktailDto> cocktails;
-
+    private List<ProductDto> products;
 
     private void createIngredients() {
         this.ingredientTypes =
@@ -86,67 +74,58 @@ public class CocktailsCRUDTest extends MockMvcTestContainersTest {
                 }).toList();
     }
 
-    private void createCocktails() {
-        this.cocktailTypes =
+    private void createProducts() {
+        this.products =
                 Stream.of(
-                        "sour",
-                        "tiki",
-                        "duo",
-                        "highball"
+                        new ProductDto(null, "Bacardi Blanco", "", ingredients.get(0), 1.57f),
+                        new ProductDto(null, "Orthodox", "", ingredients.get(1), 0.8f),
+                        new ProductDto(null, "Sady Pridonia Premium orange", "", ingredients.get(2), 0.15f),
+                        new ProductDto(null, "Homemade lemon", "", ingredients.get(3), 0.224f),
+                        new ProductDto(null, "Barinoff simple syrup", "", ingredients.get(4), 0.381f),
+                        new ProductDto(null, "Coca-cola", "", ingredients.get(5), 0.111f)
                 ).map(x -> {
-                    CocktailTypeDto type = new CocktailTypeDto();
-                    type.setName(x);
-                    type.setId(cocktailTypeDataService.add(type).getId());
-                    return type;
-                }).toList();
-
-        this.cocktails =
-                Stream.of(
-                        new CocktailDto(null, "Daiquiri", "", "", cocktailTypes.get(0)),
-                        new CocktailDto(null, "Screwdriver", "", "", cocktailTypes.get(2)),
-                        new CocktailDto(null, "Cuba Libre", "", "", cocktailTypes.get(3))
-                ).map(x -> {
-                    CocktailDto cocktail = new CocktailDto();
-                    cocktail.setName(x.getName());
-                    cocktail.setType(x.getType());
-                    cocktail.setId(cocktailDataService.add(cocktail).getId());
-                    return cocktail;
+                    ProductDto product = new ProductDto();
+                    product.setName(x.getName());
+                    product.setPrice(x.getPrice());
+                    product.setIngredient(x.getIngredient());
+                    product.setId(productDataService.add(product).getId());
+                    return product;
                 }).toList();
     }
 
     @Test
     public void getAll() throws Exception {
         createIngredients();
-        createCocktails();
+        createProducts();
         super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(cocktails.size())));
+                .perform(get("/api/v1/products/all"))
+                .andExpectAll(status().isOk(), jsonPath("$", hasSize(products.size())));
     }
 
     @Test
     public void getPage() throws Exception {
         createIngredients();
-        createCocktails();
+        createProducts();
         super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all/0"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(cocktails.size())));
+                .perform(get("/api/v1/products/all/0"))
+                .andExpectAll(status().isOk(), jsonPath("$", hasSize(products.size())));
     }
 
     @Test
     public void getEmptyPage() throws Exception {
         createIngredients();
-        createCocktails();
+        createProducts();
         super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all/1"))
+                .perform(get("/api/v1/products/all/1"))
                 .andExpectAll(status().isOk(), jsonPath("$", hasSize(0)));
     }
 
     @Test
     public void getNegativePage() throws Exception {
         createIngredients();
-        createCocktails();
+        createProducts();
         super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all/-1"))
+                .perform(get("/api/v1/products/all/-1"))
                 .andExpect(status().isBadRequest());
     }
 }
