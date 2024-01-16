@@ -5,8 +5,6 @@ spring:
     hikari:
       maximum-pool-size: 50
       connection-timeout: 6000
-    username: docker_user
-    password: passphrase
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -15,6 +13,17 @@ spring:
   cloud:
     discovery:
       enabled: false
+    openfeign:
+      client:
+        config:
+          auth:
+            url: http://localhost:8182/
+          cocktail:
+            url: http://localhost:8181/
+          product:
+            url: http://localhost:8181/
+          recipe:
+            url: http://localhost:8181/
   liquibase:
     drop-first: true
 

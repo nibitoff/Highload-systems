@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "cocktails", url="http://cocktailsapp:8181/")
+@FeignClient(name = "cocktail")
 public interface FeignCocktailServiceClient {
     @GetMapping("api/v1/cocktails/exists")
     ResponseEntity<Boolean> existsById(@RequestParam("id") Long id);
