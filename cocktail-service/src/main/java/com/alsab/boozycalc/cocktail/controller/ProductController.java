@@ -17,7 +17,7 @@ public class ProductController {
     private final ProductService productService;
     private final ProductDataService productDataService;
 
-    @GetMapping("/allInOne")
+    @GetMapping("/all")
     public ResponseEntity<?> getProducts() {
         try {
             return ResponseEntity.ok(productDataService.findAll());
@@ -35,8 +35,8 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllProductsWithPagination(Integer page) {
+    @GetMapping("/all/{page}")
+    public ResponseEntity<?> getAllProductsWithPagination(@PathVariable Integer page) {
         try {
             return ResponseEntity.ok(productDataService.findAllWithPagination(page));
         } catch (ItemNotFoundException e) {
