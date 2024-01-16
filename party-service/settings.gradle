@@ -36,6 +36,7 @@ dependencyResolutionManagement {
             library('hamcrest', 'org.hamcrest:hamcrest:2.2')
             library('testcontainers-jupiter', 'org.testcontainers', 'junit-jupiter').versionRef('testcontainers')
             library('testcontainers-postgresql', 'org.testcontainers', 'postgresql').versionRef('testcontainers')
+            library('liquibase', 'org.liquibase', 'liquibase-core').version('4.25.1')
         }
     }
 }

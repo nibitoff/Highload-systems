@@ -19,20 +19,16 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
     private final PurchaseDataService purchaseDataService;
 
-    @GetMapping("/allInOne")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllPurchases() {
-        try {
-            return ResponseEntity.ok(purchaseDataService.findAll());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
-        }
+        return ResponseEntity.ok(purchaseDataService.findAll());
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllPurchasesWithPagination(Integer page) {
+    @GetMapping("/all/{page}")
+    public ResponseEntity<?> getAllPurchasesWithPagination(@PathVariable Integer page) {
         try {
             return ResponseEntity.ok(purchaseDataService.findAllWithPagination(page));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e);
         }
     }

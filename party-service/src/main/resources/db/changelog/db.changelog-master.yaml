@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/0.0.1/changelog-parties-0.0.1.yaml
+
+  - include:
+      file: db/changelog/0.0.2/changelog-menus-0.0.2.yaml
+
+  - include:
+      file: db/changelog/0.0.3/changelog-purchases-0.0.3.yaml
+  - include:
+      file: db/changelog/0.0.3/changelog-orders-0.0.3.yaml
+
+  - include:
+      file: db/changelog/0.0.4/changelog-orderEntry-0.0.4.yaml
