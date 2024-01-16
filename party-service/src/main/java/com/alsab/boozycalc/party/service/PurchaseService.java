@@ -20,6 +20,7 @@ public class PurchaseService {
     }
 
     public PurchaseDto add(PurchaseDto purchase) throws ItemNotFoundException, FeignClientException {
+        partyDataService.findById(purchase.getParty().getId());
         productService.findById(purchase.getProduct().getId());
         return purchaseDataService.add(purchase);
     }

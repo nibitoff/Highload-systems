@@ -17,8 +17,8 @@ public class ProductFeignService {
         Boolean r = feignProductServiceClient.existsById(id).getBody();
         return r != null && r;
     }
+
     public ProductDto findById(Long id) {
-        ProductDto r = feignProductServiceClient.findById(id);
-        return r;
+        return feignProductServiceClient.findById(id);
     }
 }

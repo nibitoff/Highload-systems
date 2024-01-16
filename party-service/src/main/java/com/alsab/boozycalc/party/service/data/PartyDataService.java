@@ -21,7 +21,8 @@ public class PartyDataService {
         return partyRepo.findAll().stream().map(mapper::partyToDto).toList();
     }
 
-    public PartyDto findById(Long id) {
+    public PartyDto findById(Long id) throws ItemNotFoundException {
+        if (!partyRepo.existsById(id)) throw new ItemNotFoundException(PartyDto.class, id);
         return mapper.partyToDto(partyRepo.findById(id).orElseThrow(() -> new ItemNotFoundException(PartyDto.class, id)));
     }
 
@@ -39,7 +40,7 @@ public class PartyDataService {
         return mapper.partyToDto(partyRepo.save(mapper.dtoToParty(dto)));
     }
 
-    public Iterable<PartyDto> findAllWithPagination(Integer page){
+    public Iterable<PartyDto> findAllWithPagination(Integer page) {
         Pageable pageable = PageRequest.of(page, 50);
         return partyRepo.findAllWithPagination(pageable).stream().map(mapper::partyToDto).toList();
     }

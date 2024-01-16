@@ -65,7 +65,7 @@ public abstract class MockMvcTestContainersTest implements Extension {
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         CocktailMocks.setupMockCocktailResponse(mockCocktailService, List.of(1, 2, 3));
-        ProductMocks.setupMockProductResponse(mockCocktailService, List.of(1, 2, 3, 4, 5, 6));
+        ProductMocks.setupMockProductResponse(mockCocktailService, List.of(1, 2, 3, 4, 5, 6, 199));
     }
 
     @BeforeEach

@@ -1,11 +1,10 @@
 package com.alsab.boozycalc.party.controller;
 
 import com.alsab.boozycalc.party.dto.PurchaseDto;
-import com.alsab.boozycalc.party.exception.FeignClientException;
 import com.alsab.boozycalc.party.exception.ItemNotFoundException;
 import com.alsab.boozycalc.party.service.PurchaseService;
 import com.alsab.boozycalc.party.service.data.PurchaseDataService;
-
+import feign.FeignException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,19 +35,21 @@ public class PurchaseController {
     @PostMapping("/add")
     public ResponseEntity<?> addNewPurchase(@Valid @RequestBody PurchaseDto purchase) {
         try {
-            purchaseService.add(purchase);
-            return ResponseEntity.ok("purchase successfully added");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.ok(purchaseService.add(purchase));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (FeignException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PostMapping("/edit")
     public ResponseEntity<?> editPurchase(@Valid @RequestBody PurchaseDto purchase) {
         try {
-            purchaseService.edit(purchase);
-            return ResponseEntity.ok("purchase successfully edited");
-        } catch (ItemNotFoundException | FeignClientException e) {
+            return ResponseEntity.ok(purchaseService.edit(purchase));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (FeignException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -58,8 +59,10 @@ public class PurchaseController {
         try {
             purchaseService.delete(purchase);
             return ResponseEntity.ok(purchase);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
+        } catch (FeignException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

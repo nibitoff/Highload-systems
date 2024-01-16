@@ -14,17 +14,32 @@ import static org.springframework.util.StreamUtils.copyToString;
 public class ProductMocks {
     public static void setupMockProductResponse(WireMockServer mockService, List<Integer> products) throws IOException {
         for(Integer productId: products){
-            mockService.stubFor(WireMock.get(WireMock.urlEqualTo(String.format("/api/v1/products/find?id=%d", productId)))
-                    .willReturn(WireMock.aResponse()
-                            .withStatus(HttpStatus.OK.value())
-                            .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                            .withBody(
-                                    copyToString(
-                                            CocktailMocks.class.getClassLoader().getResourceAsStream(String.format("payload/products/product_%d.json", productId)),
-                                            defaultCharset()
-                                    )
-                            ))
-            );
+            if(productId < 100){
+                mockService.stubFor(WireMock.get(WireMock.urlEqualTo(String.format("/api/v1/products/find?id=%d", productId)))
+                        .willReturn(WireMock.aResponse()
+                                .withStatus(HttpStatus.OK.value())
+                                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                                .withBody(
+                                        copyToString(
+                                                CocktailMocks.class.getClassLoader().getResourceAsStream(String.format("payload/products/product_%d.json", productId)),
+                                                defaultCharset()
+                                        )
+                                ))
+                );
+            } else {
+                mockService.stubFor(WireMock.get(WireMock.urlEqualTo(String.format("/api/v1/products/find?id=%d", productId)))
+                        .willReturn(WireMock.aResponse()
+                                .withStatus(HttpStatus.BAD_REQUEST.value())
+                                .withHeader("Content-Type", MediaType.TEXT_PLAIN_VALUE)
+                                .withBody(
+                                        copyToString(
+                                                CocktailMocks.class.getClassLoader().getResourceAsStream(String.format("payload/products/product_%d", productId)),
+                                                defaultCharset()
+                                        )
+                                ))
+                );
+            }
+
         }
     }
 }

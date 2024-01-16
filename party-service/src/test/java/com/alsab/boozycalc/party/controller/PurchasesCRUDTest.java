@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -19,6 +20,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -119,8 +121,7 @@ public class PurchasesCRUDTest extends MockMvcTestContainersTest {
         createPurchases();
         super.getMockMvc()
                 .perform(get("/api/v1/purchases/all/0"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(purchases.size())))
-                .andDo(r -> System.out.println(r.getResponse().getContentAsString()));
+                .andExpectAll(status().isOk(), jsonPath("$", hasSize(purchases.size())));
     }
 
     @Test
@@ -141,5 +142,65 @@ public class PurchasesCRUDTest extends MockMvcTestContainersTest {
         super.getMockMvc()
                 .perform(get("/api/v1/purchases/all/-1"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void purchaseOfNonExistentProduct() throws Exception {
+        createParties();
+        final String body = """
+                {
+                    "product": {"id": 199},
+                    "party": {"id": 1},
+                    "quantity": 100
+                }
+                """;
+        super.getMockMvc()
+                .perform(post("/api/v1/purchases/add").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void purchaseOfNonExistentParty() throws Exception {
+        createParties();
+        final String body = """
+                {
+                    "product": {"id": 6},
+                    "party": {"id": 0},
+                    "quantity": 100
+                }
+                """;
+        super.getMockMvc()
+                .perform(post("/api/v1/purchases/add").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void purchaseNonPositiveQuantity() throws Exception {
+        createParties();
+        final String body = """
+                {
+                    "product": {"id": 6},
+                    "party": {"id": 1},
+                    "quantity": -10
+                }
+                """;
+        super.getMockMvc()
+                .perform(post("/api/v1/purchases/add").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void purchaseCorrectAdd() throws Exception {
+        createParties();
+        final String body = """
+                {
+                    "product": {"id": 6},
+                    "party": {"id": 1},
+                    "quantity": 100
+                }
+                """;
+        super.getMockMvc()
+                .perform(post("/api/v1/purchases/add").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isOk());
     }
 }
