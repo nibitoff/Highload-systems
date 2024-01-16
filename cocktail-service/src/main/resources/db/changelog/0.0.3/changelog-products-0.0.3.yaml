@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-products-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: ingredient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_ingredient_id
+                    references: ingredients(id)
+              - column:
+                  name: price
+                  type: float
+  - changeSet:
+      id: create-products-2
+      author: danandla
+      changes:
+        - addUniqueConstraint:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: products
+            columnNames: name
+            constraintName: unique_product_name

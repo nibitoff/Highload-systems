@@ -35,7 +35,6 @@ dependencyResolutionManagement {
             library('lombok', 'org.projectlombok:lombok:1.18.30')
             library('postgresql', 'org.postgresql:postgresql:42.6.0')
 
-//            library('spring-webflux', 'org.springframework', 'spring-boot-starter-webflux').versionRef('spring-boot')
             library('circuit-breaker', 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0')
 
             library('spring-boot-test', 'org.springframework.boot', 'spring-boot-starter-test').versionRef('spring-boot')
@@ -43,6 +42,7 @@ dependencyResolutionManagement {
             library('hamcrest', 'org.hamcrest:hamcrest:2.2')
             library('testcontainers-jupiter', 'org.testcontainers', 'junit-jupiter').versionRef('testcontainers')
             library('testcontainers-postgresql', 'org.testcontainers', 'postgresql').versionRef('testcontainers')
+            library('liquibase', 'org.liquibase', 'liquibase-core').version('4.25.1')
         }
     }
 }

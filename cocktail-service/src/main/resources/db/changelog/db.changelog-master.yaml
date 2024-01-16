@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/0.0.1/changelog-ingredient-types-0.0.1.yaml
+  - include:
+      file: db/changelog/0.0.1/changelog-cocktail-types-0.0.1.yaml
+
+  - include:
+      file: db/changelog/0.0.2/changelog-ingredients-0.0.2.yaml
+  - include:
+      file: db/changelog/0.0.2/changelog-cocktails-0.0.2.yaml
+
+  - include:
+      file: db/changelog/0.0.3/changelog-products-0.0.3.yaml
+  - include:
+      file: db/changelog/0.0.3/changelog-recipes-0.0.3.yaml

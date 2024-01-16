@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-cocktail-types-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: cocktail_types
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+              - column:
+                  name: description
+                  type: text
+  - changeSet:
+      id: create-cocktail-types-2
+      author: danandla
+      changes:
+        - addUniqueConstraint:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: cocktail_types
+            columnNames: name
+            constraintName: unique_cocktail_type_name

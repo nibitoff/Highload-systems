@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-ingredients-1
+      author: danil
+      changes:
+        - createTable:
+            tableName: ingredients
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: type
+                  type: BIGINT
+
+
+  - changeSet:
+      id: create-ingredients-2
+      author: danil
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: type
+            baseTableCatalogName: boozyCalc
+            baseTableName: ingredients
+            baseTableSchemaName: public
+            constraintName: fk_type_id
+            referencedColumnNames: id
+            referencedTableCatalogName: boozyCalc
+            referencedTableName: ingredient_types
+            referencedTableSchemaName: public
+        - addUniqueConstraint:
+            catalogName: boozyCalc
+            schemaName: public
+            tableName: ingredients
+            columnNames: name
+            constraintName: unique_ingredient_name
+
