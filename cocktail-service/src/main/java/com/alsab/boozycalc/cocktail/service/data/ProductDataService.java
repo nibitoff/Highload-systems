@@ -24,7 +24,8 @@ public class ProductDataService {
         return productRepo.findAll().stream().map(productMapper::productToDto).toList();
     }
 
-    public ProductDto findById(Long id) {
+    public ProductDto findById(Long id) throws ItemNotFoundException {
+        if(!productRepo.existsById(id)) throw new ItemNotFoundException(ProductDto.class, id);
         return productMapper.productToDto(productRepo.findById(id).orElseThrow(() -> new ItemNotFoundException(ProductDto.class, id)));
     }
 

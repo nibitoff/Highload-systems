@@ -27,11 +27,11 @@ public class ProductController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<ProductDto> findById(@RequestParam Long id) {
+    public ResponseEntity<?> findById(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(productDataService.findById(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getDescription());
         }
     }
 
