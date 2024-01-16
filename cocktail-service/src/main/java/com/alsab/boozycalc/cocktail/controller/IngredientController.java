@@ -17,20 +17,16 @@ public class IngredientController {
     private final IngredientService ingredientService;
     private final IngredientDataService ingredientDataService;
 
-    @GetMapping("/allInOne")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllIngredients() {
-        try {
-            return ResponseEntity.ok(ingredientDataService.findAll());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
-        }
+        return ResponseEntity.ok(ingredientDataService.findAll());
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllIngredientsWithPagination(Integer page) {
+    @GetMapping("/all/{page}")
+    public ResponseEntity<?> getAllIngredientsWithPagination(@PathVariable Integer page) {
         try {
             return ResponseEntity.ok(ingredientDataService.findAllWithPagination(page));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e);
         }
     }
@@ -41,7 +37,7 @@ public class IngredientController {
             return ResponseEntity.ok(ingredientService.add(ingredient));
         } catch (ItemNameIsAlreadyTakenException e) {
             return ResponseEntity.badRequest().body(e.getDescription());
-        } catch (Exception e) {
+        } catch (ItemNotFoundException e) {
             return ResponseEntity.badRequest().body(e);
         }
     }
@@ -54,20 +50,16 @@ public class IngredientController {
             return ResponseEntity.badRequest().body(e.getDescription());
         } catch (ItemNameIsAlreadyTakenException e) {
             return ResponseEntity.badRequest().body(e.getDescription());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
         }
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteIngredient(Long id) {
+    public ResponseEntity<?> deleteIngredient(@RequestParam Long id) {
         try {
             ingredientDataService.deleteById(id);
             return ResponseEntity.ok(id);
         } catch (ItemNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getDescription());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
         }
     }
 }
