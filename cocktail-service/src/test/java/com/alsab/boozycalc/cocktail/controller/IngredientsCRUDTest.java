@@ -1,4 +1,4 @@
-package com.alsab.boozycalc.cocktail.ingredient;
+package com.alsab.boozycalc.cocktail.controller;
 
 import com.alsab.boozycalc.cocktail.MockMvcTestContainersTest;
 import com.alsab.boozycalc.cocktail.dto.IngredientDto;
