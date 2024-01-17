@@ -16,13 +16,9 @@ spring:
     openfeign:
       client:
         config:
-          auth:
+          auth-service:
             url: http://localhost:8182/
-          cocktail:
-            url: http://localhost:8181/
-          product:
-            url: http://localhost:8181/
-          recipe:
+          cocktail-service:
             url: http://localhost:8181/
   liquibase:
     drop-first: true
