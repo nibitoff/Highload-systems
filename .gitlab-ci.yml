@@ -2,14 +2,13 @@ build-job:
   stage: build
   script:
     - echo "Hello, $GITLAB_USER_LOGIN!"
-    - ls
-    - uname -a
-    - who am i
 
-test-job1:
+test-cocktail-service:
   stage: test
   script:
-    - echo "This job tests something"
+    - echo "This job tests cocktail service"
+    - cd cocktail-service
+    - gradle clean test
 
 test-job2:
   stage: test
