@@ -1,7 +1,7 @@
 package com.alsab.boozycalc.party.service;
 
 import com.alsab.boozycalc.party.dto.RecipeDto;
-import com.alsab.boozycalc.party.feign.FeignRecipeServiceClient;
+import com.alsab.boozycalc.party.feign.FeignCocktailServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +10,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RecipeFeignService {
-    private final FeignRecipeServiceClient recipeServiceClient;
+    private final FeignCocktailServiceClient cocktailServiceClient;
 
     public List<RecipeDto> findAllByCocktail(Long id){
-        return recipeServiceClient.findAllByCocktail(id);
+        return cocktailServiceClient.recipeFindAllByCocktail(id);
     }
 }

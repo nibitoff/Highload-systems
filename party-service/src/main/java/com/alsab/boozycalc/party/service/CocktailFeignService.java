@@ -13,10 +13,10 @@ public class CocktailFeignService {
     FeignCocktailServiceClient feignCocktailServiceClient;
 
     public Boolean existsById(Long id) {
-        Boolean r = feignCocktailServiceClient.existsById(id).getBody();
+        Boolean r = feignCocktailServiceClient.cocktailExistsById(id).getBody();
         return r != null && r;
     }
     public CocktailDto findById(Long id) {
-        return feignCocktailServiceClient.findById(id);
+        return feignCocktailServiceClient.cocktailFindById(id);
     }
 }

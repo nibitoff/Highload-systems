@@ -41,12 +41,11 @@ public abstract class OrderEntryMapper {
 
     @AfterMapping
     public void mapId(OrderEntryEntity orderEntry, @MappingTarget OrderEntryDto dto){
-//        OrderMapper order_mapper = Mappers.getMapper(OrderMapper.class);
         OrderDto order_dto = orderMapper.orderToDto(orderEntry.getId().getOrder());
         dto.setOrder(order_dto);
 
         try {
-            dto.setCocktail(feignCocktailServiceClient.findById(orderEntry.getId().getCocktail()));
+            dto.setCocktail(feignCocktailServiceClient.cocktailFindById(orderEntry.getId().getCocktail()));
         } catch (FeignException e){
             dto.setCocktail(CocktailDto.builder().id(orderEntry.getId().getCocktail()).build());
         }

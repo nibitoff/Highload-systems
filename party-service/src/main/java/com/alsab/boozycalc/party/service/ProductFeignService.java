@@ -1,7 +1,7 @@
 package com.alsab.boozycalc.party.service;
 
 import com.alsab.boozycalc.party.dto.ProductDto;
-import com.alsab.boozycalc.party.feign.FeignProductServiceClient;
+import com.alsab.boozycalc.party.feign.FeignCocktailServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 public class ProductFeignService {
 
     @Autowired
-    FeignProductServiceClient feignProductServiceClient;
+    FeignCocktailServiceClient feignCocktailServiceClient;
 
     public Boolean existsById(Long id) {
-        Boolean r = feignProductServiceClient.existsById(id).getBody();
+        Boolean r = feignCocktailServiceClient.productExistsById(id).getBody();
         return r != null && r;
     }
 
     public ProductDto findById(Long id) {
-        return feignProductServiceClient.findById(id);
+        return feignCocktailServiceClient.productFindById(id);
     }
 }

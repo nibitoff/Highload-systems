@@ -43,7 +43,7 @@ public abstract class MenuMapper {
         dto.setParty(party_dto);
 
         try {
-            dto.setCocktail(feignCocktailServiceClient.findById(menu.getId().getCocktail()));
+            dto.setCocktail(feignCocktailServiceClient.cocktailFindById(menu.getId().getCocktail()));
         } catch (FeignException e){
             dto.setCocktail(CocktailDto.builder().id(menu.getId().getCocktail()).build());
         }

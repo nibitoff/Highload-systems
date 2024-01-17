@@ -13,18 +13,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
-  cloud:
-    openfeign:
-      client:
-        config:
-          auth:
-            url: http://authapp:8182/
-          cocktail:
-            url: http://cocktailsapp:8181/
-          product:
-            url: http://cocktailsapp:8181/
-          recipe:
-            url: http://cocktailsapp:8181/
 eureka:
   client:
     serviceUrl:
