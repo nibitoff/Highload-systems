@@ -28,8 +28,8 @@ test-party-service:
 
   artifacts:
     paths:
-      - cocktail-service/jacoco_report.tar.gz
-      - cocktail-service/gradle_report.tar.gz
+      - party-service/jacoco_report.tar.gz
+      - party-service/gradle_report.tar.gz
 
 deploy-prod:
   stage: deploy
