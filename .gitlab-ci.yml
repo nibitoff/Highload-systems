@@ -9,13 +9,13 @@ test-cocktail-service:
     - echo "This job tests cocktail service"
     - cd cocktail-service
     - gradle clean test
-    - tar czf jacocoreport.tar.gz build/reports/jacoco/test/html
-    - tar czf gradlereport.tar.gz build/reports/tests/test
+    - tar -C build/reports/jacoco/test/ -czf jacoco_report.tar.gz .
+    - tar -C build/reports/tests/ -czf gradle_report.tar.gz .
 
   artifacts:
     paths:
-      - cocktail-service/jacocoreport.tar.gz
-      - cocktail-service/gradlereport.tar.gz
+      - cocktail-service/jacoco_report.tar.gz
+      - cocktail-service/gradle_report.tar.gz
 
 test-party-service:
   stage: test
@@ -23,13 +23,13 @@ test-party-service:
     - echo "This job tests party service"
     - cd party-service
     - gradle clean test
-    - tar czf jacocoreport.tar.gz build/reports/jacoco/test/html
-    - tar czf gradlereport.tar.gz build/reports/tests/test
+    - tar -C build/reports/jacoco/test/ -czf jacoco_report.tar.gz .
+    - tar -C build/reports/tests/ -czf gradle_report.tar.gz .
 
   artifacts:
     paths:
-      - party-service/jacocoreport.tar.gz
-      - party-service/gradlereport.tar.gz
+      - cocktail-service/jacoco_report.tar.gz
+      - cocktail-service/gradle_report.tar.gz
 
 deploy-prod:
   stage: deploy
