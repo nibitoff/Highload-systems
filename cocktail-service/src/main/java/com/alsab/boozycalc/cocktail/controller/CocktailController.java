@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/cocktails")
@@ -18,74 +20,73 @@ public class CocktailController {
     private final CocktailDataService cocktailDataService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCocktails() {
+    public ResponseEntity<Flux<CocktailDto>> getAllCocktails() {
         try {
             return ResponseEntity.ok(cocktailDataService.findAll());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Flux.error(e));
         }
     }
 
     @GetMapping("/all/{page}")
-    public ResponseEntity<?> getAllCocktailsWithPagination(@PathVariable Integer page) {
+    public ResponseEntity<Flux<CocktailDto>> getAllCocktailsWithPagination(@PathVariable Integer page) {
         try {
             return ResponseEntity.ok(cocktailDataService.findAllWithPagination(page));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Flux.error(e));
         }
     }
 
     @GetMapping("/page/{num}")
-    public ResponseEntity<?> getAllCocktailsWithPageAndSize(@PathVariable Integer num, @RequestParam Integer size) {
+    public ResponseEntity<Flux<CocktailDto>> getAllCocktailsWithPageAndSize(@PathVariable Integer num, @RequestParam Integer size) {
         try {
             return ResponseEntity.ok(cocktailDataService.findAllWithPageAndSize(num, size));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Flux.error(e));
         }
     }
 
     @GetMapping("/find")
-    public ResponseEntity<?> findById(@RequestParam Long id) {
+    public ResponseEntity<Mono<CocktailDto>> findById(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(cocktailDataService.findById(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Mono.error(e));
         }
     }
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewCocktail(@Valid @RequestBody CocktailDto cocktail) {
+    public ResponseEntity<Mono<?>> addNewCocktail(@Valid @RequestBody CocktailDto cocktail) {
         try {
             return ResponseEntity.ok(cocktailService.add(cocktail));
         } catch (ItemNameIsAlreadyTakenException e) {
-            return ResponseEntity.badRequest().body(e.getDescription());
+            return ResponseEntity.badRequest().body(Mono.just(e.getDescription()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Mono.error(e));
         }
     }
     @PostMapping("/edit")
-    public ResponseEntity<?> editCocktail(@Valid @RequestBody CocktailDto cocktail) {
+    public ResponseEntity<Mono<?>> editCocktail(@Valid @RequestBody CocktailDto cocktail) {
         try {
             return ResponseEntity.ok(cocktailService.edit(cocktail));
         } catch (ItemNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getDescription());
+            return ResponseEntity.badRequest().body(Mono.just(e.getDescription()));
         } catch (ItemNameIsAlreadyTakenException e) {
-            return ResponseEntity.badRequest().body(e.getDescription());
+            return ResponseEntity.badRequest().body(Mono.just(e.getDescription()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Mono.error(e));
         }
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCocktail(@RequestParam Long id) {
+    public ResponseEntity<Mono<?>> deleteCocktail(@RequestParam Long id) {
         try {
-            cocktailDataService.deleteById(id);
-            return ResponseEntity.ok(id);
+            return ResponseEntity.ok(cocktailDataService.deleteById(id));
         } catch (ItemNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getDescription());
+            return ResponseEntity.badRequest().body(Mono.just(e.getDescription()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Mono.error(e));
         }
     }
 

@@ -30,6 +30,8 @@ dependencies {
     api libs.spring.boot.data
     api libs.spring.boot.web
 
+    api libs.spring.webflux
+
     api libs.spring.cloud.bootstrap
     api libs.spring.cloud.config
     api libs.spring.cloud.eureka

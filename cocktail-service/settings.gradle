@@ -18,6 +18,7 @@ dependencyResolutionManagement {
             library('spring-boot-security', 'org.springframework.boot', 'spring-boot-starter-security').versionRef('spring-boot')
             library('spring-boot-data', 'org.springframework.boot', 'spring-boot-starter-data-jpa').versionRef('spring-boot')
             library('spring-boot-web', 'org.springframework.boot', 'spring-boot-starter-web').versionRef('spring-boot')
+            library('spring-webflux', 'org.springframework.boot', 'spring-boot-starter-webflux').versionRef('spring-boot')
 
             library('spring-cloud-config', 'org.springframework.cloud', 'spring-cloud-starter-config').versionRef('spring-cloud')
             library('spring-cloud-bootstrap', 'org.springframework.cloud', 'spring-cloud-starter-bootstrap').versionRef('spring-cloud')
