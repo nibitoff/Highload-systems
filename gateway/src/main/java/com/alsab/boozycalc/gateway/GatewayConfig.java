@@ -39,7 +39,6 @@ public class GatewayConfig {
                 .route("party-service-invites", r -> r.path("/invites/**")
                         .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
                         .uri("lb://party-service"))
-//                        .uri("http://localhost:8183"))
                 .build();
     }
 
