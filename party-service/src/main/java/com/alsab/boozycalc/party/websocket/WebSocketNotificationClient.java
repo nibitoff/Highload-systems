@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebSocketNotificationClient implements StompSessionHandler {
 
-    private static final String wsServerUrl = "ws://localhost:7777/our-websocket";
+    private static final String wsServerUrl = "ws://notificationapp:7777/our-websocket";
     private static final String subscribeTopic = "/topic/sales";
     private StompSession stompSession;
 
