@@ -26,6 +26,10 @@ public class PartyDataService {
         return mapper.partyToDto(partyRepo.findById(id).orElseThrow(() -> new ItemNotFoundException(PartyDto.class, id)));
     }
 
+    public boolean existsById(Long id) {
+        return partyRepo.existsById(id);
+    }
+
     public void deleteById(Long id) {
         partyRepo.findById(id).orElseThrow(() -> new ItemNotFoundException(PartyDto.class, id));
         partyRepo.deleteById(id);

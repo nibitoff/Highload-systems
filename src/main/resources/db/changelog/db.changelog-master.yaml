@@ -57,3 +57,6 @@ databaseChangeLog:
 
   - include:
       file: 0.0.12/base-inserts-0.0.12.sql
+
+  - include:
+      file: 0.0.13/changelog-sales-0.0.13.yaml

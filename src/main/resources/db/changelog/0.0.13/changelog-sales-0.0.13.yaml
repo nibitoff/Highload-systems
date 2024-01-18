@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sales-1
+      author: danandla
+      changes:
+        - createTable:
+            tableName: sales
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: party_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_party_id
+                    references: parties(id)
+              - column:
+                  name: cocktail_type
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_type_id
+                    references: cocktail_types(id)
+              - column:
+                  name: amount
+                  type: float(50)
+              - column:
+                  name: description
+                  type: text
