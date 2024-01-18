@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id 'java-library'
+    id 'java'
     id "org.springframework.boot" version "2.7.18"
     id 'jacoco'
 }
@@ -28,22 +28,23 @@ dependencies {
     implementation libs.mapstruct
     annotationProcessor libs.mapstruct.processor
 
-    api libs.spring.boot.actuator
-    api libs.spring.boot.validation
-    api libs.spring.boot.security
-    api libs.spring.boot.data
-    api libs.spring.boot.web
+    implementation libs.spring.boot.actuator
+    implementation libs.spring.boot.validation
+    implementation libs.spring.boot.security
+    implementation libs.spring.boot.data
+    implementation libs.spring.boot.web
+    implementation libs.spring.boot.websocket
 
-    api libs.spring.cloud.bootstrap
-    api libs.spring.cloud.config
-    api libs.spring.cloud.feign
-    api libs.spring.cloud.eureka
+    implementation libs.spring.cloud.bootstrap
+    implementation libs.spring.cloud.config
+    implementation libs.spring.cloud.feign
+    implementation libs.spring.cloud.eureka
 
-    api libs.postgresql
-    api libs.jjwt.api
-    api libs.jjwt.impl
-    api libs.jjwt.jackson
-    api libs.gson
+    implementation libs.postgresql
+    implementation libs.jjwt.api
+    implementation libs.jjwt.impl
+    implementation libs.jjwt.jackson
+    implementation libs.gson
 
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
