@@ -5,6 +5,7 @@ import com.alsab.boozycalc.cocktail.dto.CocktailDto;
 import com.alsab.boozycalc.cocktail.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.cocktail.exception.ItemNotFoundException;
 import com.alsab.boozycalc.cocktail.service.CocktailService;
+import com.alsab.boozycalc.cocktail.service.data.CocktailTypeDataService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import reactor.core.publisher.Mono;
 public class CocktailController {
     private final CocktailService cocktailService;
     private final CocktailDataService cocktailDataService;
+    private final CocktailTypeDataService cocktailTypeDataService;
 
     @GetMapping("/all")
     public ResponseEntity<Flux<CocktailDto>> getAllCocktails() {
@@ -52,6 +54,24 @@ public class CocktailController {
             return ResponseEntity.ok(cocktailDataService.findById(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Mono.error(e));
+        }
+    }
+
+    @GetMapping("/type")
+    public ResponseEntity<?> getTypeById(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(cocktailTypeDataService.findById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @GetMapping("/type-exists")
+    public ResponseEntity<?> typeExistsById(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(cocktailTypeDataService.existsById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
         }
     }
 

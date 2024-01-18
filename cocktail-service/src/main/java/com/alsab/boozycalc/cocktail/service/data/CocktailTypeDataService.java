@@ -23,4 +23,8 @@ public class CocktailTypeDataService {
                 repo.findById(id).orElseThrow((() -> new ItemNotFoundException(IngredientTypeDto.class, id))
                 ));
     }
+
+    public boolean existsById(Long id){
+        return repo.existsById(id);
+    }
 }
