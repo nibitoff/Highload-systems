@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: notification-service
+  cloud:
+    config:
+      enabled: false
+      fail-fast: true
+      uri: http://config:8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

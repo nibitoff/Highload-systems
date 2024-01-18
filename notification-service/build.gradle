@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id "org.springframework.boot" version "3.2.0"
+}
+
+group = 'com.alsab.boozycalc'
+version = '0.0.1-SNAPSHOT'
+description = 'notification-service'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    implementation libs.spring.boot.web
+    implementation libs.spring.boot.validation
+    implementation libs.spring.boot.websocket
+    implementation libs.spring.cloud.bootstrap
+    implementation libs.spring.cloud.config
+    implementation libs.spring.cloud.eureka
+
+    implementation libs.gson
+}
