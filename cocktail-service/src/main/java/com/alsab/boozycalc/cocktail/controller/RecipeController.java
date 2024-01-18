@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/recipes")
@@ -16,16 +18,25 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final RecipeDataService recipeDataService;
 
-    @GetMapping("/allInOne")
-    public ResponseEntity<?> getAllRecipes() {
+    @GetMapping("/all")
+    public ResponseEntity<Flux<RecipeDto>> getAllRecipes() {
         try {
             return ResponseEntity.ok(recipeDataService.findAll());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Flux.error(e));
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/page/{num}")
+    public ResponseEntity<Flux<RecipeDto>> getAllCocktailsWithPageAndSize(@PathVariable Integer num, @RequestParam Integer size) {
+        try {
+            return ResponseEntity.ok(recipeDataService.findAllWithPageAndSize(num, size));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Flux.error(e));
+        }
+    }
+
+    @GetMapping("/all/{page}")
     public ResponseEntity<?> getAllRecipesWithPagination(Integer page) {
         try {
             return ResponseEntity.ok(recipeDataService.findAllWithPagination(page));
@@ -35,41 +46,40 @@ public class RecipeController {
     }
 
     @GetMapping("/find-by-cocktail")
-    public ResponseEntity<?> findAllByCocktail(@RequestParam Long id) {
+    public ResponseEntity<Mono<?>> findAllByCocktail(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(recipeDataService.findAllByCocktail(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Mono.error(e));
         }
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewRecipe(@Valid @RequestBody RecipeDto recipe) {
+    public ResponseEntity<Mono<?>> addNewRecipe(@Valid @RequestBody RecipeDto recipe) {
         try {
-            recipeService.add(recipe);
-            return ResponseEntity.ok("recipe successfully added");
+            return ResponseEntity.ok(recipeService.add(recipe));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Mono.error(e));
         }
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> editRecipe(@Valid @RequestBody RecipeDto recipe) {
+    public ResponseEntity<Mono<?>> editRecipe(@Valid @RequestBody RecipeDto recipe) {
         try {
-            recipeService.edit(recipe);
-            return ResponseEntity.ok("recipe successfully edited");
+            return ResponseEntity.ok(recipeService.edit(recipe));
         } catch (ItemNotFoundException e) {
-            return ResponseEntity.badRequest().body("ERROR " + e.getMessage());
+            return ResponseEntity.badRequest().body(Mono.just(e.getDescription()));
         }
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteRecipe(@RequestBody RecipeDto recipe) {
+    public ResponseEntity<Mono<?>> deleteRecipe(@RequestBody RecipeDto recipe) {
         try {
-            recipeService.delete(recipe);
-            return ResponseEntity.ok(recipe);
+            return ResponseEntity.ok(recipeDataService.delete(recipe));
+        } catch (ItemNotFoundException e) {
+            return ResponseEntity.badRequest().body(Mono.just(e.getDescription()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(Mono.error(e));
         }
     }
 }

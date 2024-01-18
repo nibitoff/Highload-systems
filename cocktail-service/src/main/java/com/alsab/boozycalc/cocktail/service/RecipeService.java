@@ -7,6 +7,8 @@ import com.alsab.boozycalc.cocktail.service.data.IngredientDataService;
 import com.alsab.boozycalc.cocktail.service.data.RecipeDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -16,20 +18,17 @@ public class RecipeService {
     private final IngredientDataService ingredientDataService;
     private final CocktailDataService cocktailDataService;
 
-    public Iterable<RecipeDto> findAll() {
+    public Flux<RecipeDto> findAll() {
         return recipeDataService.findAll();
     }
-    public RecipeDto add(RecipeDto recipe) throws ItemNotFoundException {
+    public Mono<RecipeDto> add(RecipeDto recipe) throws ItemNotFoundException {
         return recipeDataService.add(recipe);
     }
 
-    public RecipeDto edit(RecipeDto recipe) throws ItemNotFoundException {
+    public Mono<RecipeDto> edit(RecipeDto recipe) throws ItemNotFoundException {
         ingredientDataService.findById(recipe.getIngredient().getId());
         cocktailDataService.findById(recipe.getCocktail().getId());
         return recipeDataService.add(recipe);
     }
 
-    public void delete(RecipeDto recipe) throws ItemNotFoundException {
-        recipeDataService.delete(recipe);
-    }
 }

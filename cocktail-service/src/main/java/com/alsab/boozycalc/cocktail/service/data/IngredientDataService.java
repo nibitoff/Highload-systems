@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
@@ -20,8 +22,8 @@ public class IngredientDataService {
     private final IngredientRepo ingredientRepo;
     private final IngredientMapper mapper;
 
-    public Iterable<IngredientDto> findAll() {
-        return ingredientRepo.findAll().stream().map(mapper::ingredientToDto).toList();
+    public Flux<IngredientDto> findAll() {
+        return Flux.fromStream(ingredientRepo.findAll().stream().map(mapper::ingredientToDto));
     }
 
     public IngredientDto findById(Long id) {
@@ -45,18 +47,18 @@ public class IngredientDataService {
         }
     }
 
-    public IngredientDto add(IngredientDto dto) {
+    public Mono<IngredientDto> add(IngredientDto dto) {
         if(existsByName(dto.getName())){
             throw new ItemNameIsAlreadyTakenException(IngredientDto.class, dto.getName());
         }
-        return mapper.ingredientToDto(
+        return Mono.just(mapper.ingredientToDto(
                 ingredientRepo.save(
                         mapper.dtoToIngredient(dto)
-                )
+                ))
         );
     }
 
-    public IngredientDto edit(IngredientDto ingredient) throws ItemNotFoundException {
+    public Mono<IngredientDto> edit(IngredientDto ingredient) throws ItemNotFoundException {
         IngredientDto ingr = mapper.ingredientToDto(
                 ingredientRepo.findById(ingredient.getId()).orElseThrow(() -> new ItemNotFoundException(IngredientDto.class, ingredient.getId()))
         );
@@ -70,18 +72,19 @@ public class IngredientDataService {
         ingr.setName(ingredient.getName());
         ingr.setDescription(ingredient.getDescription());
         ingr.setType(ingredient.getType());
-        return mapper.ingredientToDto(
+        return Mono.just(mapper.ingredientToDto(
                 ingredientRepo.save(mapper.dtoToIngredient(ingr))
-        );
+        ));
     }
 
-    public void deleteById(Long id) {
+    public Mono<Long> deleteById(Long id) {
         if (!ingredientRepo.existsById(id)) throw new ItemNotFoundException(IngredientDto.class, id);
         ingredientRepo.deleteById(id);
+        return Mono.just(id);
     }
 
-    public Iterable<IngredientDto> findAllWithPagination(Integer page){
+    public Flux<IngredientDto> findAllWithPagination(Integer page){
         Pageable pageable = PageRequest.of(page, 50);
-        return ingredientRepo.findAllWithPagination(pageable).stream().map(mapper::ingredientToDto).toList();
+        return Flux.fromStream(ingredientRepo.findAllWithPagination(pageable).stream().map(mapper::ingredientToDto));
     }
 }
