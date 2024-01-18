@@ -1,6 +1,7 @@
 package com.alsab.boozycalc.party.feign;
 
 import com.alsab.boozycalc.party.dto.CocktailDto;
+import com.alsab.boozycalc.party.dto.CocktailTypeDto;
 import com.alsab.boozycalc.party.dto.ProductDto;
 import com.alsab.boozycalc.party.dto.RecipeDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,6 +18,12 @@ public interface FeignCocktailServiceClient {
 
     @GetMapping("api/v1/cocktails/find")
     Mono<CocktailDto> cocktailFindById(@RequestParam("id") Long id);
+
+    @GetMapping("api/v1/cocktails/type")
+    CocktailTypeDto cocktailTypeFindById(@RequestParam("id") Long id);
+
+    @GetMapping("api/v1/cocktails/type-exists")
+    Boolean cocktailTypeExistsById(@RequestParam("id") Long id);
 
     @GetMapping("api/v1/products/exists")
     ResponseEntity<Boolean> productExistsById(@RequestParam("id") Long id);
