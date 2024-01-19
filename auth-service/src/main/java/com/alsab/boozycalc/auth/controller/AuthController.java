@@ -26,15 +26,13 @@ public class AuthController {
     @PostMapping("/register")
     public Mono<ResponseEntity<AuthenticationResponse>> register(@RequestBody RegisterRequest request) {
         return authenticationService.register(request).map(ResponseEntity::ok)
-                .onErrorResume(e -> Mono.empty())
-                .switchIfEmpty(Mono.just(ResponseEntity.badRequest().body(new AuthenticationResponse(""))));
+                .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body(new AuthenticationResponse(e.getMessage()))));
     }
 
     @PostMapping("/authenticate")
     public Mono<ResponseEntity<AuthenticationResponse>> authenticate(@RequestBody AuthenticationRequest request) {
         return authenticationService.authenticate(request).map(ResponseEntity::ok)
-                .onErrorResume(e -> Mono.empty())
-                .switchIfEmpty(Mono.just(ResponseEntity.badRequest().body(new AuthenticationResponse(""))));
+                .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body(new AuthenticationResponse(e.getMessage()))));
     }
 
     @PostMapping("/validate")

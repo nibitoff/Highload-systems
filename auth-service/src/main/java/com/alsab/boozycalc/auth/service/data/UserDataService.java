@@ -25,7 +25,12 @@ public class UserDataService {
     }
 
     public Mono<UserDto> findByUserName(String username) throws UsernameNotFoundException {
-        return repo.findByUsername(username).map(mapper::userToDto);
+        return repo.existsByUsername(username).flatMap(
+                exists -> {
+                    if (!exists) throw new UsernameNotFoundException(username);
+                    return repo.findByUsername(username).map(mapper::userToDto);
+                }
+        );
     }
 
     public Mono<UserDto> saveUser(UserDto userDto) {

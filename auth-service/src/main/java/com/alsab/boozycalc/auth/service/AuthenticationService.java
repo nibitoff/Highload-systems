@@ -24,20 +24,24 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public Mono<AuthenticationResponse> register(RegisterRequest req) {
-        return userDataService.userExists(req.getUsername()).flatMap(
-                b -> {
-                    if (b) throw new UsernameIsAlreadyTakenException(req.getUsername());
-                    UserDto user = UserDto.builder()
-                            .id(null)
-                            .realName(req.getRealname())
-                            .username(req.getUsername())
-                            .password(passwordEncoder.encode(req.getPassword()))
-                            .role(RoleEnum.USER)
-                            .build();
-                    userDataService.saveUser(user);
-                    String jwt = jwtUtils.generateJwtToken(user);
-                    return Mono.just(new AuthenticationResponse(jwt));
-                });
+        return userDataService.userExists(req.getUsername())
+                .flatMap(
+                        b -> {
+                            if (b) {
+                                return Mono.error(new UsernameIsAlreadyTakenException(req.getUsername()));
+                            }
+                            UserDto user = UserDto.builder()
+                                    .id(null)
+                                    .realName(req.getRealname())
+                                    .username(req.getUsername())
+                                    .password(passwordEncoder.encode(req.getPassword()))
+                                    .role(RoleEnum.USER)
+                                    .build();
+                            return Mono.just(user);
+                        }
+                )
+                .flatMap(userDataService::saveUser)
+                .flatMap(u -> Mono.just(new AuthenticationResponse(jwtUtils.generateJwtToken(u))));
     }
 
     public Mono<AuthenticationResponse> authenticate(AuthenticationRequest request) {
