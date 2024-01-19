@@ -30,6 +30,27 @@ services:
     command:
       update --changelog-file=db.changelog-master.yaml --url=jdbc:postgresql://prod_db:5432/${DOCKER_POSTGRES_DB} --username=${DOCKER_POSTGRES_USER} --password=${DOCKER_POSTGRES_PASSWORD}
 
+  eureka:
+    image: booze-eureka:latest
+    container_name: eureka
+    environment:
+      - 'PAGINATION_MAX_SIZE=50'
+      - 'JWT_SECRET=itmo'
+      - 'JWT_EXPIRED=15'
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    depends_on:
+      prod_db:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
+      interval: 15s
+      retries: 5
+      timeout: 10s
+
   config:
     image: booze-config:latest
     container_name: config
@@ -44,31 +65,10 @@ services:
     ports:
       - "8888:8888"
     depends_on:
-      prod_db:
+      eureka:
         condition: service_healthy
     healthcheck:
       test: "curl --fail --silent config:8888/actuator/health | grep UP || exit 1"
-      interval: 15s
-      retries: 5
-      timeout: 10s
-
-  eureka:
-    image: booze-eureka:latest
-    container_name: eureka
-    environment:
-      - 'PAGINATION_MAX_SIZE=50'
-      - 'JWT_SECRET=itmo'
-      - 'JWT_EXPIRED=15'
-    build:
-      context: ./eureka-server
-      dockerfile: Dockerfile
-    ports:
-      - "8761:8761"
-    depends_on:
-      config:
-        condition: service_healthy
-    healthcheck:
-      test: "curl --fail --silent localhost:8761/actuator/health | grep UP || exit 1"
       interval: 15s
       retries: 5
       timeout: 10s
@@ -87,7 +87,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      eureka:
+      config:
         condition: service_healthy
 
 

@@ -24,6 +24,7 @@ dependencyResolutionManagement {
             library('spring-cloud-feign', 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE')
             library('spring-cloud-dependencies', 'org.springframework.cloud:spring-cloud-dependencies:2022.0.1')
 
+            library('gson', 'com.google.code.gson:gson:2.7')
             library('jjwt-api', 'io.jsonwebtoken', 'jjwt-api').versionRef('io-json')
             library('jjwt-impl', 'io.jsonwebtoken', 'jjwt-impl').versionRef('io-json')
             library('jjwt-jackson', 'io.jsonwebtoken', 'jjwt-jackson').versionRef('io-json')

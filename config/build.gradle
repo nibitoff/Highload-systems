@@ -17,6 +17,8 @@ repositories {
 dependencies {
     api libs.spring.boot.actuator
     api libs.spring.cloud.dependencies
+    api libs.spring.cloud.eureka
+    api libs.gson
     implementation 'org.springframework.cloud:spring-cloud-config-server:4.0.1'
 }
 
