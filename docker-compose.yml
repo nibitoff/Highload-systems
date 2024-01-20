@@ -9,10 +9,9 @@ services:
       POSTGRES_DB: ${DOCKER_POSTGRES_DB}
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-      - ../2. Init Database:/docker-entrypoint-initdb.d
       - db-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     healthcheck:
       test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${DOCKER_POSTGRES_USER} -d ${DOCKER_POSTGRES_DB}'" ]
       interval: 3s
@@ -41,7 +40,7 @@ services:
       context: ./eureka-server
       dockerfile: Dockerfile
     ports:
-      - "8761:8761"
+      - 8761:8761
     depends_on:
       prod_db:
         condition: service_healthy
@@ -63,7 +62,7 @@ services:
       context: ./config
       dockerfile: Dockerfile
     ports:
-      - "8888:8888"
+      - 8888:8888
     depends_on:
       eureka:
         condition: service_healthy
@@ -85,7 +84,7 @@ services:
       context: ./gateway
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - 8080:8080
     depends_on:
       config:
         condition: service_healthy
@@ -109,8 +108,6 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 8181:8181
 
   authapp:
     depends_on:
@@ -132,8 +129,6 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 8182:8182
 
   partyapp:
     depends_on:
@@ -153,7 +148,5 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 8183:8183
 volumes:
   db-data:
