@@ -13,6 +13,6 @@ public class RecipeFeignService {
     private final FeignCocktailServiceClient cocktailServiceClient;
 
     public List<RecipeDto> findAllByCocktail(Long id){
-        return cocktailServiceClient.recipeFindAllByCocktail(id);
+        return cocktailServiceClient.recipeFindAllByCocktail(id).toStream().toList();
     }
 }

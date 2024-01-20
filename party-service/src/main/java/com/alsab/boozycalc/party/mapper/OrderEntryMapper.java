@@ -45,7 +45,7 @@ public abstract class OrderEntryMapper {
         dto.setOrder(order_dto);
 
         try {
-            dto.setCocktail(feignCocktailServiceClient.cocktailFindById(orderEntry.getId().getCocktail()));
+            dto.setCocktail(feignCocktailServiceClient.cocktailFindById(orderEntry.getId().getCocktail()).block());
         } catch (FeignException e){
             dto.setCocktail(CocktailDto.builder().id(orderEntry.getId().getCocktail()).build());
         }

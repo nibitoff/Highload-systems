@@ -19,6 +19,6 @@ public class ProductFeignService {
     }
 
     public ProductDto findById(Long id) {
-        return feignCocktailServiceClient.productFindById(id);
+        return feignCocktailServiceClient.productFindById(id).block();
     }
 }

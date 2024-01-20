@@ -17,6 +17,6 @@ public class CocktailFeignService {
         return r != null && r;
     }
     public CocktailDto findById(Long id) {
-        return feignCocktailServiceClient.cocktailFindById(id);
+        return feignCocktailServiceClient.cocktailFindById(id).block();
     }
 }
