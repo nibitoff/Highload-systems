@@ -3,9 +3,8 @@
  */
 
 plugins {
-    id 'java-library'
+    id 'java'
     id "org.springframework.boot" version "3.2.0"
-    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 repositories {
@@ -16,26 +15,19 @@ repositories {
 }
 
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.0"
-    }
-}
-
 dependencies {
     compileOnly libs.lombok
     annotationProcessor libs.lombok
 
-    api 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-    api 'org.springframework.cloud:spring-cloud-starter-config'
-    api 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    api 'org.springframework.cloud:spring-cloud-starter-gateway'
-    api 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation libs.spring.cloud.bootstrap
+    implementation libs.spring.cloud.config
+    implementation libs.spring.cloud.eureka
+    implementation libs.spring.cloud.gateway
 
-    api libs.circuit.breaker
-    api libs.jjwt.api
-    api libs.jjwt.impl
-    api libs.jjwt.jackson
+    implementation libs.gson
+    implementation libs.jjwt.api
+    implementation libs.jjwt.impl
+    implementation libs.jjwt.jackson
 }
 
 group = 'org.springframework.boot'

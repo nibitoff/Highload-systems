@@ -1,26 +1,23 @@
 package com.alsab.boozycalc.gateway.security;
 
-import com.alsab.boozycalc.gateway.feign.AuthServiceFeignClient;
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.http.converter.HttpMessageConverter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Component
-@ConditionalOnClass(HttpMessageConverter.class)
+@RequiredArgsConstructor
 public class JwtUtil {
-    private final CircuitBreaker thisCircuitBreaker;
-    private final AuthServiceFeignClient authServiceFeignClient;
+    private final ReactorLoadBalancerExchangeFilterFunction lbFunction;
 
-    public JwtUtil(CircuitBreaker thisCircuitBreaker, @Lazy AuthServiceFeignClient authServiceFeignClient) {
-        this.thisCircuitBreaker = thisCircuitBreaker;
-        this.authServiceFeignClient = authServiceFeignClient;
-    }
-
-
-    public boolean isValid(String token) {
-        return thisCircuitBreaker.decorateSupplier(() -> authServiceFeignClient.doFilter(token)).get();
+    public Mono<Boolean> isValid(String token) {
+        return WebClient.builder()
+                .filter(lbFunction)
+                .build()
+                .post()
+                .uri("http://auth-service/api/v1/auth/do-filter")
+                .bodyValue(token).retrieve().bodyToMono(Boolean.class);
     }
 
 }

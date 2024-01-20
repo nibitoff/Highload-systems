@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -47,18 +48,19 @@ public class JwtUtilsService {
         return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean doFilterFromRequest(String jwt){
+    public boolean doFilterFromRequest(String jwt) {
         final String username;
 
         try {
             username = getUserNameFromJwtToken(jwt);
-        } catch (io.jsonwebtoken.security.SignatureException | io.jsonwebtoken.ExpiredJwtException e){
+        } catch (io.jsonwebtoken.security.SignatureException |
+                 io.jsonwebtoken.ExpiredJwtException e) {
             return false;
         }
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        try {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if(validateJwtToken(jwt, userDetails)) {
+            if (validateJwtToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -68,8 +70,9 @@ public class JwtUtilsService {
                 return true;
             }
             return false;
+        } catch (UsernameNotFoundException e) {
+            return false;
         }
-        return true;
     }
 
     public boolean validateJwtToken(String authToken, UserDetails userDetails) {

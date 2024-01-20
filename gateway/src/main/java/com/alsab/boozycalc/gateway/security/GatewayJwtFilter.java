@@ -25,10 +25,10 @@ public class GatewayJwtFilter implements GatewayFilter {
 
         final String token = this.getAuthHeader(request);
 
-        if (!jwtUtil.isValid(token.substring(7)))
-            return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
-
-        return chain.filter(exchange);
+        return jwtUtil.isValid(token.substring(7)).flatMap(v -> {
+            if (!v) return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
+            return chain.filter(exchange);
+        });
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {

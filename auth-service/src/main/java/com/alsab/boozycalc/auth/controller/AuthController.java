@@ -41,8 +41,8 @@ public class AuthController {
     }
 
     @PostMapping("/do-filter")
-    public ResponseEntity<Boolean> filter(@RequestBody String token) {
-        return ResponseEntity.ok(jwtUtilsService.doFilterFromRequest(token));
+    public Mono<ResponseEntity<Boolean>> filter(@RequestBody String token) {
+        return Mono.just(jwtUtilsService.doFilterFromRequest(token)).map(ResponseEntity::ok);
     }
 
     @PostMapping("/get-login-from-token")
