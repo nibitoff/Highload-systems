@@ -196,7 +196,7 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
 
         Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
 
-        System.out.println("ingredientDelete: " + response.getBody().block().toString());
+        System.out.println("ingredientNotExistingEdit: " + response.getBody().block().toString());
 
     }
 

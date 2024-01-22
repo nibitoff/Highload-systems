@@ -18,10 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.WebApplicationContext;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Executable;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThrows;
@@ -119,6 +121,22 @@ public class CocktailsCRUDTest extends MockMvcTestContainersTest {
                 }).toList();
     }
 
+    private void createCocktailsTypes() {
+        this.cocktailTypes =
+                Stream.of(
+                        "spirit",
+                        "liquor",
+                        "juice",
+                        "syrup",
+                        "drink"
+                ).map(x -> {
+                    CocktailTypeDto type = new CocktailTypeDto();
+                    type.setName(x);
+                    type.setId(cocktailTypeDataService.add(type).getId());
+                    return type;
+                }).toList();
+    }
+
     @Test
     public void getAll() throws Exception {
         createIngredients();
@@ -152,5 +170,83 @@ public class CocktailsCRUDTest extends MockMvcTestContainersTest {
         createCocktails();
         Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), controller.getAllCocktailsWithPagination(-1).getStatusCode());
         System.out.println("Response is "+ controller.getAllCocktailsWithPagination(-1).getStatusCode());
+    }
+
+    @Test
+    public void cocktailOfExistentTypeTest() throws Exception {
+        createIngredients();
+        createCocktailsTypes();
+        CocktailDto cocktailDto = new CocktailDto();
+        cocktailDto.setId(0L);
+        cocktailDto.setName("super cocktail");
+        cocktailDto.setDescription("");
+        cocktailDto.setType(cocktailTypes.get(0));
+
+        ResponseEntity<Mono<?>> response = controller.addNewCocktail(cocktailDto);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        System.out.println("Response of cocktailOfExistentTypeTest is "+ response.getBody().block().toString());
+    }
+
+    @Test
+    public void cocktailOfNonExistentTypeTest() throws Exception {
+        createIngredients();
+        createCocktailsTypes();
+        CocktailDto cocktailDto = new CocktailDto();
+        cocktailDto.setId(0L);
+        cocktailDto.setName("super cocktail");
+        cocktailDto.setDescription("");
+        cocktailDto.setType(cocktailTypes.get(0));
+
+        ResponseEntity<Mono<?>> response = controller.addNewCocktail(cocktailDto);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        System.out.println("Response of cocktailOfNonExistentTypeTest is "+ response.getBody().block().toString());
+
+    }
+
+
+    @Test
+    public void cocktailEdit() throws Exception {
+        createIngredients();
+        createCocktailsTypes();
+        createCocktails();
+
+        CocktailDto whiteRum = cocktails.get(0);
+
+        whiteRum.setName("Dark Rum");
+        whiteRum.setDescription("Matured in charred oak barrels");
+        whiteRum.setType(whiteRum.getType());
+
+        ResponseEntity<Mono<?>> response = controller.editCocktail(whiteRum);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        Assertions.assertEquals(cocktailDataService.findById(whiteRum.getId()).block().getName(), "Dark Rum");
+
+        System.out.println("cocktailEdit: " + response.getBody().block().toString());
+    }
+
+
+    @Test
+    public void cocktailDelete() throws Exception {
+        createIngredients();
+        createCocktailsTypes();
+        createCocktails();
+        ResponseEntity<Mono<?>> response = controller.deleteCocktail(1L);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        Assertions.assertEquals(StreamSupport.stream(cocktailDataService.findAll().toStream().spliterator(), false).count(), cocktails.size() - 1);
+        System.out.println("cocktailDelete: " + cocktailDataService.findAll().map(CocktailDto::getId).blockFirst());
+    }
+
+    @Test
+    public void cocktailNonExistentDelete() throws Exception {
+        createIngredients();
+        createCocktailsTypes();
+        createCocktails();
+        ResponseEntity<Mono<?>> response = controller.deleteCocktail(1000L);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
+        System.out.println("cocktailNonExistentDelete: " + response.getBody().block().toString());
     }
 }

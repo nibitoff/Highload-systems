@@ -12,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.WebApplicationContext;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -97,6 +99,8 @@ public class ProductsCRUDTest extends MockMvcTestContainersTest {
                 }).toList();
     }
 
+
+
     @Test
     public void getAll() throws Exception {
         createIngredients();
@@ -131,5 +135,62 @@ public class ProductsCRUDTest extends MockMvcTestContainersTest {
         ResponseEntity<Flux<ProductDto>> response = controller.getAllProductsWithPagination(-1);
         Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
         System.out.println("Response is "+ response.getStatusCode());
+    }
+
+    @Test
+    public void productOfExistentTypeTest() throws Exception {
+        createIngredients();
+        ProductDto productDto = new ProductDto();
+        productDto.setId(0L);
+        productDto.setName("super product");
+        productDto.setDescription("");
+        productDto.setIngredient(ingredients.get(0));
+
+        ResponseEntity<Mono<?>> response = controller.addProduct(productDto);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        System.out.println("Response of productOfExistentTypeTest is "+ response.getBody().block().toString());
+    }
+
+
+    @Test
+    public void productEdit() throws Exception {
+        createIngredients();
+        createProducts();
+
+        ProductDto whiteRum = products.get(0);
+
+        whiteRum.setName("Dark Rum");
+        whiteRum.setDescription("Matured in charred oak barrels");
+        whiteRum.setIngredient(whiteRum.getIngredient());
+
+        ResponseEntity<Mono<?>> response = controller.editProduct(whiteRum);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        Assertions.assertEquals(productDataService.findById(whiteRum.getId()).block().getName(), "Dark Rum");
+
+        System.out.println("productEdit: " + response.getBody().block().toString());
+    }
+
+
+    @Test
+    public void productDelete() throws Exception {
+        createIngredients();
+        createProducts();
+        ResponseEntity<Mono<?>> response = controller.deleteProductById(1L);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        Assertions.assertEquals(StreamSupport.stream(productDataService.findAll().toStream().spliterator(), false).count(), products.size() - 1);
+        System.out.println("productDelete: " + productDataService.findAll().map(ProductDto::getId).blockFirst());
+    }
+
+    @Test
+    public void productNonExistentDelete() throws Exception {
+        createIngredients();
+        createProducts();
+        ResponseEntity<Mono<?>> response = controller.deleteProductById(1000L);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
+        System.out.println("productNonExistentDelete: " + response.getBody().block().toString());
     }
 }
