@@ -4,11 +4,14 @@ import com.alsab.boozycalc.cocktail.MockMvcTestContainersTest;
 import com.alsab.boozycalc.cocktail.dto.*;
 import com.alsab.boozycalc.cocktail.service.data.*;
 import jakarta.persistence.EntityManagerFactory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.WebApplicationContext;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,7 +19,6 @@ import java.util.stream.Stream;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = "spring.cloud.config.enabled=false")
 @DirtiesContext
@@ -24,6 +26,7 @@ public class ProductsCRUDTest extends MockMvcTestContainersTest {
     private final IngredientTypeDataService ingredientTypeDataService;
     private final IngredientDataService ingredientDataService;
     private final ProductDataService productDataService;
+    private final ProductController controller;
 
     @Autowired
     public ProductsCRUDTest(
@@ -31,9 +34,10 @@ public class ProductsCRUDTest extends MockMvcTestContainersTest {
             EntityManagerFactory entityManagerFactory,
             IngredientTypeDataService ingredientTypeDataService,
             IngredientDataService ingredientDataService,
-            ProductDataService productDataService
-    ) {
+            ProductDataService productDataService,
+            ProductController controller) {
         super(webApplicationContext, entityManagerFactory);
+        this.controller = controller;
         this.ingredientTypeDataService = ingredientTypeDataService;
         this.ingredientDataService = ingredientDataService;
         this.productDataService = productDataService;
@@ -69,7 +73,7 @@ public class ProductsCRUDTest extends MockMvcTestContainersTest {
                     IngredientDto ingr = new IngredientDto();
                     ingr.setName(x.getName());
                     ingr.setType(x.getType());
-                    ingr.setId(ingredientDataService.add(ingr).getId());
+                    ingr.setId(ingredientDataService.add(ingr).map(IngredientDto::getId).block());
                     return ingr;
                 }).toList();
     }
@@ -88,7 +92,7 @@ public class ProductsCRUDTest extends MockMvcTestContainersTest {
                     product.setName(x.getName());
                     product.setPrice(x.getPrice());
                     product.setIngredient(x.getIngredient());
-                    product.setId(productDataService.add(product).getId());
+                    product.setId(productDataService.add(product).map(ProductDto::getId).block());
                     return product;
                 }).toList();
     }
@@ -97,35 +101,35 @@ public class ProductsCRUDTest extends MockMvcTestContainersTest {
     public void getAll() throws Exception {
         createIngredients();
         createProducts();
-        super.getMockMvc()
-                .perform(get("/api/v1/products/all"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(products.size())));
+        int responseSize = controller.getProducts().getBody().collectList().block().size();
+        Assertions.assertEquals(products.size(), responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getPage() throws Exception {
         createIngredients();
         createProducts();
-        super.getMockMvc()
-                .perform(get("/api/v1/products/all/0"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(products.size())));
+        int responseSize = controller.getAllProductsWithPagination(0).getBody().collectList().block().size();
+        Assertions.assertEquals(products.size(), responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getEmptyPage() throws Exception {
         createIngredients();
         createProducts();
-        super.getMockMvc()
-                .perform(get("/api/v1/products/all/1"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(0)));
+        int responseSize = controller.getAllProductsWithPagination(1).getBody().collectList().block().size();
+        Assertions.assertEquals(0, responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getNegativePage() throws Exception {
         createIngredients();
         createProducts();
-        super.getMockMvc()
-                .perform(get("/api/v1/products/all/-1"))
-                .andExpect(status().isBadRequest());
+        ResponseEntity<Flux<ProductDto>> response = controller.getAllProductsWithPagination(-1);
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
+        System.out.println("Response is "+ response.getStatusCode());
     }
 }

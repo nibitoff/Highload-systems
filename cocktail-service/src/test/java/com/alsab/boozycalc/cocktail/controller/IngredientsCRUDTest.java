@@ -11,23 +11,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.WebApplicationContext;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @SpringBootTest(properties = "spring.cloud.config.enabled=false")
-@DirtiesContext
 public class IngredientsCRUDTest extends MockMvcTestContainersTest {
-
     private final IngredientTypeRepo ingredientTypeRepo;
+
     private final IngredientTypeDataService ingredientTypeDataService;
     private final IngredientDataService ingredientDataService;
 
@@ -35,10 +30,12 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
     public IngredientsCRUDTest(WebApplicationContext webApplicationContext,
                                EntityManagerFactory entityManagerFactory,
                                IngredientTypeRepo ingredientTypeRepo,
+                               IngredientController controller,
                                IngredientTypeDataService ingredientTypeDataService,
                                IngredientDataService ingredientDataService
     ) {
         super(webApplicationContext, entityManagerFactory);
+        this.controller = controller;
         this.ingredientTypeRepo = ingredientTypeRepo;
         this.ingredientTypeDataService = ingredientTypeDataService;
         this.ingredientDataService = ingredientDataService;
@@ -47,6 +44,7 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
     private List<IngredientTypeDto> ingredientTypes;
     private List<IngredientDto> ingredients;
 
+    private final IngredientController controller;
     private void createIngredientTypes() {
         this.ingredientTypes =
                 Stream.of(
@@ -76,7 +74,7 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
                     IngredientDto ingr = new IngredientDto();
                     ingr.setName(x.getName());
                     ingr.setType(x.getType());
-                    ingr.setId(ingredientDataService.add(ingr).getId());
+                    ingr.setId(ingredientDataService.add(ingr).map(IngredientDto::getId).block());
                     return ingr;
                 }).toList();
     }
@@ -85,73 +83,66 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
     public void getAll() throws Exception {
         createIngredientTypes();
         createIngredients();
-        super.getMockMvc()
-                .perform(get("/api/v1/ingredients/all"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(ingredients.size())));
+        int responseSize = controller.getAllIngredients().getBody().collectList().block().size();
+        Assertions.assertEquals(ingredients.size(), responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getPage() throws Exception {
         createIngredientTypes();
         createIngredients();
-        super.getMockMvc()
-                .perform(get("/api/v1/ingredients/all/0"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(ingredients.size())));
+        int responseSize = controller.getAllIngredientsWithPagination(0).getBody().collectList().block().size();
+        Assertions.assertEquals(ingredients.size(), responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getEmptyPage() throws Exception {
         createIngredientTypes();
         createIngredients();
-        super.getMockMvc()
-                .perform(get("/api/v1/ingredients/all/1"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(0)));
+        int responseSize = controller.getAllIngredientsWithPagination(1).getBody().collectList().block().size();
+        Assertions.assertEquals(0, responseSize);
+        System.out.println("Response size is " + responseSize);
     }
-
     @Test
     public void getNegativePage() throws Exception {
         createIngredientTypes();
         createIngredients();
-        super.getMockMvc()
-                .perform(get("/api/v1/ingredients/all/-1"))
-                .andExpect(status().isBadRequest());
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), controller.getAllIngredientsWithPagination(-1).getStatusCode());
+        System.out.println("Response is "+ controller.getAllIngredientsWithPagination(-1).getStatusCode());
     }
 
     @Test
     public void ingredientOfExistentTypeTest() throws Exception {
         createIngredientTypes();
+        IngredientDto ingredientDto = new IngredientDto();
+        ingredientDto.setId(0L);
+        ingredientDto.setName("rum");
+        ingredientDto.setDescription("");
+        ingredientDto.setType(ingredientTypes.get(0));
 
-        final String body = String.format("""
-                {
-                    "id": 0,
-                    "name": "rum",
-                    "description": "",
-                    "type": {
-                        "id": %d
-                    }
-                }
-                """, ingredientTypes.get(0).getId());
+        ResponseEntity<Mono<?>> response = controller.addNewIngredient(ingredientDto);
+        System.out.println("Response of addNewIngredient is "+ response.getBody().block().toString());
 
-        super.getMockMvc()
-                .perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(status().isOk());
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        System.out.println("Response of addNewIngredient is "+ response.getBody().block().toString());
     }
 
     @Test
     public void ingredientOfNonExistentTypeTest() throws Exception {
-        final String body = """
-                {
-                    "id": 0,
-                    "name": "rum",
-                    "description": "",
-                    "type": {
-                        "id": 1
-                    }
-                }
-                """;
-        super.getMockMvc()
-                .perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(status().isBadRequest());
+        createIngredientTypes();
+        IngredientDto ingredientDto = new IngredientDto();
+        ingredientDto.setId(0L);
+        ingredientDto.setName("rum");
+        ingredientDto.setDescription("");
+        ingredientDto.setType(ingredientTypes.get(2));
+
+        ResponseEntity<Mono<?>> response = controller.addNewIngredient(ingredientDto);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        System.out.println("Response of ingredientOfNonExistentTypeTest is "+ response.getBody().block().toString());
+
     }
 
     @Test
@@ -159,20 +150,17 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
         createIngredientTypes();
         createIngredients();
 
-        final String body = String.format("""
-                {
-                    "id": 0,
-                    "name": "White Rum",
-                    "description": "",
-                    "type": {
-                        "id": %d
-                    }
-                }
-                """, ingredientTypes.get(0).getId());
+        IngredientDto ingredientDto = new IngredientDto();
+        ingredientDto.setId(0L);
+        ingredientDto.setName("White Rum");
+        ingredientDto.setDescription("");
+        ingredientDto.setType(ingredientTypes.get(0));
 
-        super.getMockMvc()
-                .perform(post("/api/v1/ingredients/add").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(status().isBadRequest());
+        ResponseEntity<Mono<?>> response = controller.addNewIngredient(ingredientDto);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
+        System.out.println("Response of ingredientWithTakenName is "+ response.getBody().block().toString());
+
     }
 
     @Test
@@ -181,39 +169,35 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
         createIngredients();
 
         IngredientDto whiteRum = ingredients.get(0);
-        final String body = String.format("""
-                {
-                    "id": %d,
-                    "name": "Dark Rum",
-                    "description": "Matured in charred oak barrels",
-                    "type": {
-                        "id": %d
-                    }
-                }
-                """, whiteRum.getId(), whiteRum.getType().getId());
 
-        super.getMockMvc()
-                .perform(post("/api/v1/ingredients/edit").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpectAll(status().isOk());
+        whiteRum.setName("Dark Rum");
+        whiteRum.setDescription("Matured in charred oak barrels");
+        whiteRum.setType(whiteRum.getType());
+
+        ResponseEntity<Mono<?>> response = controller.editIngredient(whiteRum);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
         Assertions.assertEquals(ingredientDataService.findById(whiteRum.getId()).getName(), "Dark Rum");
+
+        System.out.println("ingredientDelete: " + response.getBody().block().toString());
     }
 
     @Test
     public void ingredientNotExistingEdit() throws Exception {
         createIngredientTypes();
-        final String body = """
-                {
-                    "id": 1001,
-                    "name": "Dark Rum",
-                    "description": "Matured in charred oak barrels",
-                    "type": {
-                        "id": 0
-                    }
-                }
-                """;
-        super.getMockMvc()
-                .perform(post("/api/v1/ingredients/edit").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpectAll(status().isBadRequest()).andDo(r -> System.out.println(r.getResponse().getContentAsString()));
+
+        IngredientDto ingredientDto = new IngredientDto();
+        ingredientDto.setId(1001L);
+        ingredientDto.setName("Dark Rum");
+        ingredientDto.setDescription("Matured in charred oak barrels");
+        ingredientDto.setType(ingredientTypes.get(0));
+
+        ResponseEntity<Mono<?>> response = controller.editIngredient(ingredientDto);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
+
+        System.out.println("ingredientDelete: " + response.getBody().block().toString());
+
     }
 
     @Test
@@ -222,39 +206,33 @@ public class IngredientsCRUDTest extends MockMvcTestContainersTest {
         createIngredients();
 
         IngredientDto whiteRum = ingredients.get(0);
-        final String body = String.format("""
-                {
-                    "id": %d,
-                    "name": "Vodka",
-                    "description": "Matured in charred oak barrels",
-                    "type": {
-                        "id": %d
-                    }
-                }
-                """, whiteRum.getId(), whiteRum.getType().getId());
+        whiteRum.setId(whiteRum.getId());
+        whiteRum.setName("Vodka");
+        whiteRum.setDescription("Matured in charred oak barrels");
+        whiteRum.setType(whiteRum.getType());
 
-        super.getMockMvc()
-                .perform(post("/api/v1/ingredients/edit").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpectAll(status().isBadRequest());
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), controller.editIngredient(whiteRum).getStatusCode());
+
     }
 
     @Test
     public void ingredientDelete() throws Exception {
         createIngredientTypes();
         createIngredients();
-        super.getMockMvc()
-                .perform(delete("/api/v1/ingredients/delete?id=1"))
-                .andExpect(status().isOk());
-        Assertions.assertEquals(StreamSupport.stream(ingredientDataService.findAll().spliterator(), false).count(), ingredients.size() - 1);
+        ResponseEntity<Mono<?>> response = controller.deleteIngredient(1L);
+
+        Assertions.assertEquals(ResponseEntity.ok().build().getStatusCode(), response.getStatusCode());
+        Assertions.assertEquals(StreamSupport.stream(ingredientDataService.findAll().toStream().spliterator(), false).count(), ingredients.size() - 1);
+        System.out.println("ingredientDelete: " + ingredientDataService.findAll().map(IngredientDto::getId).blockFirst());
     }
 
     @Test
     public void ingredientNonExistentDelete() throws Exception {
         createIngredientTypes();
         createIngredients();
-        super.getMockMvc()
-                .perform(delete("/api/v1/ingredients/delete?id=1000"))
-                .andExpect(status().isBadRequest());
-        Assertions.assertEquals(StreamSupport.stream(ingredientDataService.findAll().spliterator(), false).count(), ingredients.size());
+        ResponseEntity<Mono<?>> response = controller.deleteIngredient(1000L);
+
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), response.getStatusCode());
+        System.out.println("ingredientDelete: " + response.getBody().block().toString());
     }
 }

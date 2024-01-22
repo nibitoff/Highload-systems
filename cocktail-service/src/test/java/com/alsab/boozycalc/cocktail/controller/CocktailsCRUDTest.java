@@ -10,23 +10,27 @@ import com.alsab.boozycalc.cocktail.service.data.CocktailTypeDataService;
 import com.alsab.boozycalc.cocktail.service.data.IngredientDataService;
 import com.alsab.boozycalc.cocktail.service.data.IngredientTypeDataService;
 import jakarta.persistence.EntityManagerFactory;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.WebApplicationContext;
+import reactor.core.publisher.Flux;
 
+import java.lang.reflect.Executable;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = "spring.cloud.config.enabled=false")
-@DirtiesContext
 public class CocktailsCRUDTest extends MockMvcTestContainersTest {
+    private final CocktailController controller;
     private final IngredientTypeDataService ingredientTypeDataService;
     private final IngredientDataService ingredientDataService;
     private final CocktailTypeDataService cocktailTypeDataService;
@@ -36,12 +40,13 @@ public class CocktailsCRUDTest extends MockMvcTestContainersTest {
     public CocktailsCRUDTest(
             WebApplicationContext webApplicationContext,
             EntityManagerFactory entityManagerFactory,
-            IngredientTypeDataService ingredientTypeDataService,
+            CocktailController controller, IngredientTypeDataService ingredientTypeDataService,
             IngredientDataService ingredientDataService,
             CocktailTypeDataService cocktailTypeDataService,
             CocktailDataService cocktailDataService
     ) {
         super(webApplicationContext, entityManagerFactory);
+        this.controller = controller;
         this.ingredientTypeDataService = ingredientTypeDataService;
         this.ingredientDataService = ingredientDataService;
         this.cocktailTypeDataService = cocktailTypeDataService;
@@ -81,7 +86,7 @@ public class CocktailsCRUDTest extends MockMvcTestContainersTest {
                     IngredientDto ingr = new IngredientDto();
                     ingr.setName(x.getName());
                     ingr.setType(x.getType());
-                    ingr.setId(ingredientDataService.add(ingr).getId());
+                    ingr.setId(ingredientDataService.add(ingr).map(IngredientDto::getId).block());
                     return ingr;
                 }).toList();
     }
@@ -109,7 +114,7 @@ public class CocktailsCRUDTest extends MockMvcTestContainersTest {
                     CocktailDto cocktail = new CocktailDto();
                     cocktail.setName(x.getName());
                     cocktail.setType(x.getType());
-                    cocktail.setId(cocktailDataService.add(cocktail).getId());
+                    cocktail.setId(cocktailDataService.add(cocktail).map(CocktailDto::getId).block());
                     return cocktail;
                 }).toList();
     }
@@ -118,35 +123,34 @@ public class CocktailsCRUDTest extends MockMvcTestContainersTest {
     public void getAll() throws Exception {
         createIngredients();
         createCocktails();
-        super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(cocktails.size())));
+        int responseSize = controller.getAllCocktails().getBody().collectList().block().size();
+        Assertions.assertEquals(cocktails.size(), responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getPage() throws Exception {
         createIngredients();
         createCocktails();
-        super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all/0"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(cocktails.size())));
+        int responseSize = controller.getAllCocktailsWithPagination(0).getBody().collectList().block().size();
+        Assertions.assertEquals(cocktails.size(), responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getEmptyPage() throws Exception {
         createIngredients();
         createCocktails();
-        super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all/1"))
-                .andExpectAll(status().isOk(), jsonPath("$", hasSize(0)));
+        int responseSize = controller.getAllCocktailsWithPagination(1).getBody().collectList().block().size();
+        Assertions.assertEquals(0, responseSize);
+        System.out.println("Response size is " + responseSize);
     }
 
     @Test
     public void getNegativePage() throws Exception {
         createIngredients();
         createCocktails();
-        super.getMockMvc()
-                .perform(get("/api/v1/cocktails/all/-1"))
-                .andExpect(status().isBadRequest());
+        Assertions.assertEquals(ResponseEntity.badRequest().build().getStatusCode(), controller.getAllCocktailsWithPagination(-1).getStatusCode());
+        System.out.println("Response is "+ controller.getAllCocktailsWithPagination(-1).getStatusCode());
     }
 }

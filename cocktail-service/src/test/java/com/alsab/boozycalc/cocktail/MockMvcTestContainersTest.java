@@ -1,5 +1,6 @@
 package com.alsab.boozycalc.cocktail;
 
+import com.alsab.boozycalc.cocktail.controller.CocktailController;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
+import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,7 +34,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 public abstract class MockMvcTestContainersTest implements Extension {
-    private MockMvc mockMvc;
     private final WebApplicationContext webApplicationContext;
     private final EntityManagerFactory entityManagerFactory;
 
@@ -54,10 +56,6 @@ public abstract class MockMvcTestContainersTest implements Extension {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    @BeforeEach
-    public void setup() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
-    }
 
     @BeforeEach
     @Transactional
