@@ -51,6 +51,9 @@ public class GatewayConfig {
                 .route("cocktail-service-invites", r -> r.path("/recipes/**")
                         .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
                         .uri("lb://cocktail-service"))
+                .route("file-service-files", r -> r.path("/files/**")
+                        .filters(f -> f.prefixPath("/api/v1").filter(gatewayJwtFilter))
+                        .uri("lb://file-service"))
                 .build();
     }
 

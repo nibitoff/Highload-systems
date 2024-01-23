@@ -76,22 +76,6 @@ public class PartyController {
         }
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<?> createOrder(
-//            @RequestParam Long partyId,
-//            @RequestParam Long userId,
-//            @RequestParam Long cocktailId) {
-//        try {
-//            return ResponseEntity.ok(partyService.createOrder(partyId, userId, cocktailId));
-//        } catch (ItemNotFoundException  e) {
-//            return ResponseEntity.badRequest().body(e.getDescription());
-//        } catch (NoCocktailInMenuException  e) {
-//            return ResponseEntity.badRequest().body(e.getDescription());
-//        } catch (NoIngredientsForCocktailException e) {
-//            return ResponseEntity.badRequest().body(e.getDescription());
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e);
-//        }
-//    }
+
 }
 

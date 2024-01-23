@@ -166,5 +166,16 @@ services:
     ports:
       - 7777:7777
 
+  fileapp:
+    depends_on:
+      - gateway
+    image: booze-file:latest
+    container_name: file-service
+    build:
+      context: ./file-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
 volumes:
   db-data:
