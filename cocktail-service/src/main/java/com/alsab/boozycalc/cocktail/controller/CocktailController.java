@@ -6,6 +6,13 @@ import com.alsab.boozycalc.cocktail.exception.ItemNameIsAlreadyTakenException;
 import com.alsab.boozycalc.cocktail.exception.ItemNotFoundException;
 import com.alsab.boozycalc.cocktail.service.CocktailService;
 import com.alsab.boozycalc.cocktail.service.data.CocktailTypeDataService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Tag(name = "Cocktail controller", description = "Controller to manage cocktails")
 @RestController
 @RequestMapping("/api/v1/cocktails")
 @RequiredArgsConstructor
@@ -22,6 +30,15 @@ public class CocktailController {
     private final CocktailTypeDataService cocktailTypeDataService;
 
     @GetMapping("/all")
+    @Operation(description = "Get all cocktails list",
+            summary = "Get all cocktails",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights")})
+
     public ResponseEntity<Flux<CocktailDto>> getAllCocktails() {
         try {
             return ResponseEntity.ok(cocktailDataService.findAll());

@@ -32,6 +32,8 @@ dependencies {
 
     api libs.spring.webflux
 
+    api libs.webmvc.ui
+
     api libs.spring.cloud.bootstrap
     api libs.spring.cloud.config
     api libs.spring.cloud.eureka
