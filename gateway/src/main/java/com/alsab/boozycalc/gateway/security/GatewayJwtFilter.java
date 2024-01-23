@@ -10,13 +10,35 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Component
 @RequiredArgsConstructor
 public class GatewayJwtFilter implements GatewayFilter {
     private final JwtUtil jwtUtil;
 
+    private static final HashSet<String> AUTH_WHITELIST = Stream.of(
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    ).collect(Collectors.toCollection(HashSet::new));
+
+    private boolean inWhiteList(String path) {
+        return AUTH_WHITELIST.contains(path);
+    }
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+        if(inWhiteList(path)) return chain.filter(exchange);
 
         ServerHttpRequest request = exchange.getRequest();
 
@@ -26,7 +48,8 @@ public class GatewayJwtFilter implements GatewayFilter {
         final String token = this.getAuthHeader(request);
 
         return jwtUtil.isValid(token.substring(7)).flatMap(v -> {
-            if (!v) return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
+            if (!v)
+                return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
             return chain.filter(exchange);
         });
     }

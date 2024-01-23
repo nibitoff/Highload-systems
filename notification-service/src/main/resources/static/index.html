@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello WS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="/stomp.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <div id="main-container">
+
+        <div class="workarea">
+            <div class="form-group centered">
+                <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        name="username"
+                        placeholder="enter username"
+                />
+                <input
+                        type="text"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="enter password"
+                />
+                <button class="btn btn-primary" type="submit" id="auth"> auth </button>
+
+                <div class="spinner-border" role="status" id="wait-auth">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="message-history" class="table-striped">
+                            <thead>
+                            <tr>
+                                <th>Messages
+                                    <span
+                                            id="notifications"
+                                            style="
+                                    color: white;
+                                    background-color: red;
+                                    padding-left: 15px;
+                                    padding-right: 15px;">
+                                    </span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="messages">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+    <script src="/script.js"></script>
+</html>
