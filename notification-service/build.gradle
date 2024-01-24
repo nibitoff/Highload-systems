@@ -23,4 +23,7 @@ dependencies {
     implementation libs.spring.cloud.eureka
 
     implementation libs.gson
+
+    implementation libs.webmvc.ui
+
 }

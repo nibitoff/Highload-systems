@@ -37,7 +37,7 @@ public class CocktailController {
             @ApiResponse(responseCode = "200", description = "Everything is good"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "404", description = "Can't find some entity"),
-            @ApiResponse(responseCode = "403", description = "Not enough rights")})
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
 
     public ResponseEntity<Flux<CocktailDto>> getAllCocktails() {
         try {
@@ -48,6 +48,14 @@ public class CocktailController {
     }
 
     @GetMapping("/all/{page}")
+    @Operation(description = "Get cocktails by page",
+            summary = "Get cocktails by page",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<Flux<CocktailDto>> getAllCocktailsWithPagination(@PathVariable Integer page) {
         try {
             return ResponseEntity.ok(cocktailDataService.findAllWithPagination(page));
@@ -57,6 +65,14 @@ public class CocktailController {
     }
 
     @GetMapping("/page/{num}")
+    @Operation(description = "Get cocktails by page and amount",
+            summary = "Get cocktails by page and amount",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<Flux<CocktailDto>> getAllCocktailsWithPageAndSize(@PathVariable Integer num, @RequestParam Integer size) {
         try {
             return ResponseEntity.ok(cocktailDataService.findAllWithPageAndSize(num, size));
@@ -66,6 +82,14 @@ public class CocktailController {
     }
 
     @GetMapping("/find")
+    @Operation(description = "Find cocktail by id",
+            summary = "Find cocktail by id",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<Mono<CocktailDto>> findById(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(cocktailDataService.findById(id));
@@ -75,6 +99,14 @@ public class CocktailController {
     }
 
     @GetMapping("/type")
+    @Operation(description = "Get cocktail type by id",
+            summary = "Find cocktail type by id",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<?> getTypeById(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(cocktailTypeDataService.findById(id));
@@ -84,6 +116,14 @@ public class CocktailController {
     }
 
     @GetMapping("/type-exists")
+    @Operation(description = "Check if cocktail type exists by id",
+            summary = "Check if cocktail type exists",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<?> typeExistsById(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(cocktailTypeDataService.existsById(id));
@@ -94,6 +134,14 @@ public class CocktailController {
 
 
     @PostMapping("/add")
+    @Operation(description = "Add new cocktail",
+            summary = "Add new cocktail",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<Mono<?>> addNewCocktail(@Valid @RequestBody CocktailDto cocktail) {
         try {
             return ResponseEntity.ok(cocktailService.add(cocktail));
@@ -104,6 +152,14 @@ public class CocktailController {
         }
     }
     @PostMapping("/edit")
+    @Operation(description = "Edit existing cocktail",
+            summary = "Edit cocktail",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<Mono<?>> editCocktail(@Valid @RequestBody CocktailDto cocktail) {
         try {
             return ResponseEntity.ok(cocktailService.edit(cocktail));
@@ -117,6 +173,14 @@ public class CocktailController {
     }
 
     @DeleteMapping("/delete")
+    @Operation(description = "Delete existing cocktail",
+            summary = "Delete cocktail",
+            tags = "cocktails")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything is good"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Can't find some entity"),
+            @ApiResponse(responseCode = "403", description = "Not enough rights", content = { @Content(schema = @Schema()) })})
     public ResponseEntity<Mono<?>> deleteCocktail(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(cocktailDataService.deleteById(id));

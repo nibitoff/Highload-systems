@@ -6,11 +6,14 @@ import com.alsab.boozycalc.party.exception.NoCocktailInMenuException;
 import com.alsab.boozycalc.party.exception.NoIngredientsForCocktailException;
 import com.alsab.boozycalc.party.service.OrderService;
 import com.alsab.boozycalc.party.service.data.OrderDataService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Order controller", description = "Controller to manage orders")
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
@@ -18,6 +21,9 @@ public class OrderController {
     private final OrderDataService orderDataService;
     private final OrderService orderService;
     @GetMapping("/allInOne")
+    @Operation(description = "Get all orders list",
+            summary = "Get all orders",
+            tags = "orders")
     public ResponseEntity<?> getOrders() {
         try {
             return ResponseEntity.ok(orderDataService.findAll());
@@ -36,6 +42,9 @@ public class OrderController {
 //    }
 
     @DeleteMapping("/delete")
+    @Operation(description = "Delete existing order",
+            summary = "Delete order",
+            tags = "orders")
     public ResponseEntity<?> deleteById(@RequestParam Long id) {
         try {
             orderDataService.deleteById(id);
@@ -46,6 +55,9 @@ public class OrderController {
     }
 
     @PostMapping("/add")
+    @Operation(description = "Add new order",
+            summary = "Add new order",
+            tags = "orders")
     public ResponseEntity<?> addOrder(@Valid @RequestBody OrderDto order) {
         try {
             orderDataService.add(order);
@@ -56,6 +68,9 @@ public class OrderController {
     }
 
     @PostMapping("/edit")
+    @Operation(description = "Edit existing order",
+            summary = "Edit order",
+            tags = "orders")
     public ResponseEntity<?> editOrder(@Valid @RequestBody OrderDto order) {
         try {
             orderDataService.edit(order);
@@ -66,6 +81,9 @@ public class OrderController {
     }
 
     @PostMapping("/create")
+    @Operation(description = "Create new user's order in party",
+            summary = "Create order",
+            tags = "orders")
     public ResponseEntity<?> createOrder(
             @RequestParam Long partyId,
             @RequestParam Long userId,

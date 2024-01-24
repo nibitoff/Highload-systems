@@ -46,6 +46,8 @@ dependencies {
     implementation libs.jjwt.jackson
     implementation libs.gson
 
+    implementation libs.webmvc.ui
+
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
     testImplementation libs.spring.boot.test

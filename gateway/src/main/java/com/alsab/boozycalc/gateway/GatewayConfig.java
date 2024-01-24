@@ -1,6 +1,10 @@
 package com.alsab.boozycalc.gateway;
 
 import com.alsab.boozycalc.gateway.security.GatewayJwtFilter;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -16,6 +20,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -81,5 +86,19 @@ public class GatewayConfig {
         source.registerCorsConfiguration("/**", corsConfig);
 
         return new CorsWebFilter(source);
+    }
+
+    @Bean
+    public OpenAPI myOpenAPI() {
+        Contact contact = new Contact();
+        contact.setUrl("https://github.com/nibitoff");
+
+        Info info = new Info()
+                .title("BoozyCalc Management API")
+                .version("1.0")
+                .contact(contact)
+                .description("This API exposes BoozyCalc app");
+
+        return new OpenAPI().info(info);
     }
 }

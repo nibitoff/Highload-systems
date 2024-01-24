@@ -16,6 +16,8 @@ dependencyResolutionManagement {
             library('spring-boot-web', 'org.springframework.boot', 'spring-boot-starter-web').versionRef('spring-boot')
             library('spring-boot-websocket', 'org.springframework.boot', 'spring-boot-starter-websocket').versionRef('spring-boot')
 
+            library('webmvc-ui', 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0')
+
             library('spring-cloud-config', 'org.springframework.cloud', 'spring-cloud-starter-config').versionRef('spring-cloud')
             library('spring-cloud-bootstrap', 'org.springframework.cloud', 'spring-cloud-starter-bootstrap').versionRef('spring-cloud')
             library('spring-cloud-eureka', 'org.springframework.cloud', 'spring-cloud-starter-netflix-eureka-client').versionRef('spring-cloud')

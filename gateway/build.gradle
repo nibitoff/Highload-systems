@@ -28,6 +28,11 @@ dependencies {
     implementation libs.jjwt.api
     implementation libs.jjwt.impl
     implementation libs.jjwt.jackson
+
+    implementation libs.webflux.api
+    implementation libs.openapi.common
+
+
 }
 
 group = 'org.springframework.boot'

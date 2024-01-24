@@ -42,6 +42,9 @@ dependencyResolutionManagement {
             library('hamcrest', 'org.hamcrest:hamcrest:2.2')
             library('testcontainers-jupiter', 'org.testcontainers', 'junit-jupiter').versionRef('testcontainers')
             library('testcontainers-postgresql', 'org.testcontainers', 'postgresql').versionRef('testcontainers')
+
+            library('webflux-openapi', 'org.springdoc:springdoc-openapi-starter-webflux-api:2.2.0')
+            library('webmvc-ui', 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0')
         }
     }
 }

@@ -32,6 +32,8 @@ dependencyResolutionManagement {
             library('lombok', 'org.projectlombok:lombok:1.18.30')
             library('postgresql', 'org.postgresql:postgresql:42.6.0')
 
+            library('webmvc-ui', 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0')
+
             library('spring-boot-test', 'org.springframework.boot', 'spring-boot-starter-test').versionRef('spring-boot')
             library('spring-security-test', 'org.springframework.security:spring-security-test:6.0.2')
             library('hamcrest', 'org.hamcrest:hamcrest:2.2')

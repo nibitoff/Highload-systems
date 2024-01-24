@@ -32,6 +32,7 @@ dependencies {
 
     api libs.spring.webflux
 
+    api libs.webflux.openapi
     api libs.webmvc.ui
 
     api libs.spring.cloud.bootstrap
